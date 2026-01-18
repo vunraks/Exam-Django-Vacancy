@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Контакты - Поиск вакансий{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <div class="form-card">
+        <h2>📞 Связаться с нами</h2>
+
+        <div class="contact-info" style="margin-bottom: 30px;">
+            <div style="background: #f8f9fa; padding: 25px; border-radius: 10px; margin-bottom: 25px;">
+                <h3 style="margin-bottom: 15px;">📍 Наши контакты</h3>
+                <p><strong>Email:</strong> support@vacancy-search.kz</p>
+                <p><strong>Телефон:</strong> +7 (777) 123-45-67</p>
+                <p><strong>Адрес:</strong> г. Алматы, ул. Примерная, д. 10</p>
+                <p><strong>Часы работы:</strong> Пн-Пт: 9:00-18:00</p>
+            </div>
+        </div>
+
+        <form method="post" class="profile-form">
+            {% csrf_token %}
+            <h3 style="margin-bottom: 20px;">📝 Форма обратной связи</h3>
+
+            <div class="form-group">
+                <label for="name">Ваше имя:</label>
+                <input type="text" id="name" name="name" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Ваш Email:</label>
+                <input type="email" id="email" name="email" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="message">Сообщение:</label>
+                <textarea id="message" name="message" rows="5" class="form-control" required></textarea>
+            </div>
+
+            <button type="submit" class="btn-save">📤 Отправить сообщение</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

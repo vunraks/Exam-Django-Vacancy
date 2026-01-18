@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block content %}
+<div class="form-container">
+    <form method="post" class="vacancy-form">
+        <h2>{% if form.instance.pk %}Редактировать вакансию{% else %}Создать вакансию{% endif %}</h2>
+        {% csrf_token %}
+        <div>
+            <label for="{{ form.title.id_for_label }}">Название:</label>
+            {{ form.title }}
+        </div>
+        <div>
+            <label for="{{ form.description.id_for_label }}">Описание:</label>
+            {{ form.description }}
+        </div>
+        <div>
+            <label for="{{ form.company.id_for_label }}">Компания:</label>
+            {{ form.company }}
+        </div>
+        <div>
+            <label for="{{ form.location.id_for_label }}">Местоположение:</label>
+            {{ form.location }}
+        </div>
+        <div>
+            <label for="{{ form.salary.id_for_label }}">Зарплата:</label>
+            {{ form.salary }}
+        </div>
+        <div>
+            <label for="{{ form.experience.id_for_label }}">Опыт работы:</label>
+            {{ form.experience }}
+        </div>
+        <button type="submit">{% if form.instance.pk %}Сохранить{% else %}Отправить на модерацию{% endif %}</button>
+    </form>  <!-- Закрывающий тег формы -->
+</div>
+{% endblock %}

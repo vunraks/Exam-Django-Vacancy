@@ -1,0 +1,316 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ vacancy.title }} - Поиск вакансий{% endblock %}
+
+{% block content %}
+<div class="vacancy-detail-container">
+    <!-- Хлебные крошки -->
+    <div class="breadcrumbs">
+        <a href="{% url 'home_page' %}">🏠 Главная</a>
+        <span class="separator">›</span>
+        <a href="{% url 'vacancy_list' %}">📋 Все вакансии</a>
+        <span class="separator">›</span>
+        <span class="current">Детали вакансии</span>
+    </div>
+
+    <!-- Заголовок вакансии -->
+    <div class="vacancy-header">
+        <div class="vacancy-title-section">
+            <h1>{{ vacancy.title }}</h1>
+            <div class="vacancy-meta">
+                <div class="company-info">
+                    <span class="company-icon">🏢</span>
+                    <span class="company-name">{{ vacancy.company }}</span>
+
+                    {% if vacancy.location %}
+                        <span class="location-info">
+                            <span class="location-icon">📍</span>
+                            {{ vacancy.location }}
+                        </span>
+                    {% endif %}
+
+                    <span class="date-info">
+                        <span class="date-icon">📅</span>
+                        Добавлено: {{ vacancy.created_at|date:"d.m.Y H:i" }}
+                        {% if vacancy.updated_at != vacancy.created_at %}
+                            (обновлено: {{ vacancy.updated_at|date:"d.m.Y H:i" }})
+                        {% endif %}
+                    </span>
+                </div>
+
+                <div class="vacancy-status">
+                    {% if vacancy.status == 'published' %}
+                        <span class="status-badge published">✅ Опубликовано</span>
+                    {% elif vacancy.status == 'moderation' %}
+                        <span class="status-badge moderation">⏳ На модерации</span>
+                    {% else %}
+                        <span class="status-badge rejected">❌ Отклонено</span>
+                    {% endif %}
+
+                    {% if vacancy.author %}
+                        <span class="author-info">
+                            <span class="author-icon">👤</span>
+                            Автор: {{ vacancy.author.username }}
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Блок с зарплатой -->
+        <div class="salary-section">
+            {% if vacancy.salary %}
+                <div class="salary-amount">💰 {{ vacancy.salary }} ₸</div>
+                <div class="salary-label">Зарплата</div>
+            {% else %}
+                <div class="salary-amount">💰 По договоренности</div>
+                <div class="salary-label">Зарплата</div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Основная информация -->
+    <div class="vacancy-content">
+        <div class="main-info">
+            <!-- Описание вакансии -->
+            <div class="description-section">
+                <h2>📝 Описание вакансии</h2>
+                <div class="description-content">
+                    {{ vacancy.description|linebreaks }}
+                </div>
+            </div>
+
+            <!-- Требования и условия -->
+            <div class="requirements-section">
+                <h2>🎯 Требования и условия</h2>
+                <div class="requirements-grid">
+                    {% if vacancy.experience %}
+                    <div class="requirement-item">
+                        <div class="requirement-icon">⏳</div>
+                        <div class="requirement-content">
+                            <h4>Опыт работы</h4>
+                            <p>{{ vacancy.experience }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <div class="requirement-item">
+                        <div class="requirement-icon">💼</div>
+                        <div class="requirement-content">
+                            <h4>Тип занятости</h4>
+                            <p>Полная занятость</p>
+                        </div>
+                    </div>
+
+                    <div class="requirement-item">
+                        <div class="requirement-icon">🏢</div>
+                        <div class="requirement-content">
+                            <h4>Компания</h4>
+                            <p>{{ vacancy.company }}</p>
+                        </div>
+                    </div>
+
+                    {% if vacancy.location %}
+                    <div class="requirement-item">
+                        <div class="requirement-icon">📍</div>
+                        <div class="requirement-content">
+                            <h4>Местоположение</h4>
+                            <p>{{ vacancy.location }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Кнопки действий -->
+            <div class="action-section">
+                <h2>⚡ Действия</h2>
+                <div class="action-buttons">
+                    {% if user.is_authenticated %}
+                        {% if vacancy.author == user %}
+                            <!-- Кнопки для автора вакансии -->
+                            <a href="{% url 'vacancy_update' vacancy.pk %}" class="btn-edit-large">
+                                ✏️ Редактировать вакансию
+                            </a>
+                            <a href="{% url 'vacancy_delete' vacancy.pk %}" class="btn-delete-large">
+                                🗑️ Удалить вакансию
+                            </a>
+                        {% else %}
+                            <!-- Кнопки для других пользователей -->
+                            <button class="btn-apply-large" onclick="applyForVacancy()">
+                                📨 Откликнуться на вакансию
+                            </button>
+                            <button class="btn-save-large" onclick="saveVacancy()">
+                                💾 Сохранить в избранное
+                            </button>
+                        {% endif %}
+                    {% else %}
+                        <a href="{% url 'login' %}" class="btn-apply-large">
+                            🔑 Войдите, чтобы откликнуться
+                        </a>
+                    {% endif %}
+
+                    <a href="{% url 'vacancy_list' %}" class="btn-back-large">
+                        ← Вернуться к списку вакансий
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Боковая панель -->
+        <div class="sidebar">
+            <!-- Быстрые действия -->
+            <div class="quick-actions-card">
+                <h3>⚡ Быстрые действия</h3>
+                <div class="quick-buttons">
+                    <a href="{% url 'home_page' %}" class="quick-btn">
+                        🏠 На главную
+                    </a>
+                    <a href="{% url 'vacancy_list' %}" class="quick-btn">
+                        📋 Все вакансии
+                    </a>
+
+                    {% if user.is_authenticated and vacancy.author != user %}
+                        <button class="quick-btn" onclick="shareVacancy()">
+                            🔗 Поделиться
+                        </button>
+                        <button class="quick-btn" onclick="printVacancy()">
+                            🖨️ Распечатать
+                        </button>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Контактная информация -->
+            <div class="contact-card">
+                <h3>📞 Контактная информация</h3>
+                <div class="contact-info">
+                    <p><strong>Компания:</strong> {{ vacancy.company }}</p>
+
+                    {% if vacancy.location %}
+                        <p><strong>Адрес:</strong> {{ vacancy.location }}</p>
+                    {% endif %}
+
+                    <p><strong>Статус:</strong>
+                        {% if vacancy.status == 'published' %}
+                            <span class="status-text published">✅ Активная</span>
+                        {% elif vacancy.status == 'moderation' %}
+                            <span class="status-text moderation">⏳ На проверке</span>
+                        {% else %}
+                            <span class="status-text rejected">❌ Закрытая</span>
+                        {% endif %}
+                    </p>
+
+                    <p><strong>Дата публикации:</strong> {{ vacancy.created_at|date:"d.m.Y" }}</p>
+
+                    {% if vacancy.author %}
+                        <p><strong>Разместил:</strong> {{ vacancy.author.username }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Статистика просмотров -->
+            <div class="stats-card">
+                <h3>📊 Статистика</h3>
+                <div class="stats-content">
+                    <div class="stat-item">
+                        <div class="stat-value">🔥</div>
+                        <div class="stat-label">Активная вакансия</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">👁️</div>
+                        <div class="stat-label">Просмотры: 0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">📨</div>
+                        <div class="stat-label">Отклики: 0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<script>
+    // Функции для взаимодействия с вакансией
+    function applyForVacancy() {
+        if(confirm('Вы уверены, что хотите откликнуться на эту вакансию?')) {
+            // Здесь можно добавить AJAX запрос на сервер
+            alert('Ваш отклик успешно отправлен! Работодатель свяжется с вами в ближайшее время.');
+
+            // Обновляем статистику
+            updateStats('responses');
+        }
+    }
+
+    function saveVacancy() {
+        if(confirm('Сохранить эту вакансию в избранное?')) {
+            // Здесь можно добавить сохранение в избранное
+            alert('Вакансия сохранена в избранное!');
+            updateStats('saves');
+        }
+    }
+
+    function shareVacancy() {
+        const vacancyUrl = window.location.href;
+        const vacancyTitle = document.querySelector('h1').textContent;
+
+        if(navigator.share) {
+            navigator.share({
+                title: vacancyTitle,
+                text: 'Посмотрите эту вакансию: ' + vacancyTitle,
+                url: vacancyUrl
+            });
+        } else {
+            // Копируем ссылку в буфер обмена
+            navigator.clipboard.writeText(vacancyUrl).then(() => {
+                alert('Ссылка на вакансию скопирована в буфер обмена!');
+            });
+        }
+    }
+
+    function printVacancy() {
+        window.print();
+    }
+
+    function updateStats(type) {
+        // Здесь можно обновлять статистику через AJAX
+        console.log('Статистика обновлена:', type);
+    }
+
+    // Подсветка ключевых слов в описании
+    document.addEventListener('DOMContentLoaded', function() {
+        const description = document.querySelector('.description-content');
+        if(description) {
+            // Можно добавить подсветку определенных слов
+            const keywords = ['требования', 'обязанности', 'условия', 'зарплата', 'опыт'];
+            let html = description.innerHTML;
+
+            keywords.forEach(keyword => {
+                const regex = new RegExp(`(${keyword})`, 'gi');
+                html = html.replace(regex, '<mark>$1</mark>');
+            });
+
+            description.innerHTML = html;
+        }
+
+        // Анимация при прокрутке
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    entry.target.classList.add('animated');
+                }
+            });
+        }, observerOptions);
+
+        // Наблюдаем за всеми секциями
+        document.querySelectorAll('.description-section, .requirements-section, .action-section').forEach(section => {
+            observer.observe(section);
+        });
+    });
+</script>
+{% endblock %}

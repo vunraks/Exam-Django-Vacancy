@@ -1,0 +1,90 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Поиск вакансий{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Панель пользователя -->
+    <div class="user-panel">
+        <div class="user-info">
+            {% if user.is_authenticated %}
+                👤 <strong>{{ user.username }}</strong>
+            {% else %}
+                👤 Гость
+            {% endif %}
+        </div>
+        <div class="user-links">
+            {% if user.is_authenticated %}
+                <a href="{% url 'profile' %}">Профиль</a>
+                <a href="{% url 'logout' %}">Выйти</a>
+            {% else %}
+                <a href="{% url 'login' %}">Войти</a>
+                <a href="{% url 'register' %}">Регистрация</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Сообщения -->
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+            <div class="alert {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Заголовок и навигация -->
+    <header>
+        <h1>🔍 Поиск вакансий</h1>
+        <nav>
+            <ul>
+                <li><a href="{% url 'home_page' %}">🏠 Главная</a></li>
+                <li><a href="{% url 'vacancy_list' %}">📋 Все вакансии</a></li>
+                {% if user.is_authenticated %}
+                {% endif %}
+                <li><a href="{% url 'about_page' %}">ℹ️ О нас</a></li>
+                <li><a href="{% url 'contact_page' %}">📞 Связаться</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Контент страницы -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Футер -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Поиск вакансий</h3>
+                <p>Лучшая платформа для поиска работы и найма специалистов</p>
+            </div>
+            <div class="footer-section">
+                <h3>Быстрые ссылки</h3>
+                <p><a href="{% url 'home_page' %}">Главная</a></p>
+                <p><a href="{% url 'vacancy_list' %}">Вакансии</a></p>
+                <p><a href="{% url 'about_page' %}">О нас</a></p>
+            </div>
+            <div class="footer-section">
+                <h3>Контакты</h3>
+                <p>Email: info@vacancy-search.kz</p>
+                <p>Телефон: +7 (777) 123-45-67</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Поиск вакансий. Все права защищены.</p>
+            {% if user.is_authenticated %}
+                <p>Вы вошли как: <strong>{{ user.username }}</strong></p>
+            {% endif %}
+        </div>
+    </footer>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

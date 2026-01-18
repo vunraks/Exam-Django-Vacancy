@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Главная - Поиск вакансий{% endblock %}
+
+{% block content %}
+<section class="search-filter">
+    <form method="GET" action="{% url 'home_page' %}">
+        <input type="text" name="search" placeholder="Поиск по названию" value="{{ request.GET.search }}">
+        <select name="salary">
+            <option value="">Зарплата</option>
+            {% for salary in salaries %}
+                <option value="{{ salary }}" {% if selected_salary == salary|stringformat:"s" %}selected{% endif %}>{{ salary }} ₸</option>
+            {% endfor %}
+        </select>
+        <select name="experience">
+            <option value="">Опыт работы</option>
+            {% for experience in experiences %}
+                <option value="{{ experience }}" {% if selected_experience == experience %}selected{% endif %}>{{ experience }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">🔍 Применить фильтр</button>
+        <a href="{% url 'home_page' %}" class="button-clear">🗑️ Сбросить</a>
+    </form>
+</section>
+
+{% if user.is_authenticated %}
+<section class="user-stats">
+    <div class="stat-card">
+        <h3>📊 Ваша активность</h3>
+        <p>Созданные вакансии: <strong>{{ user.vacancy_set.count }}</strong></p>
+        <p><a href="{% url 'vacancy_create' %}" class="button1">➕ Добавить новую</a></p>
+    </div>
+</section>
+{% endif %}
+
+<section class="vacancies">
+    <h2>🎯 Доступные вакансии</h2>
+
+    {% for vacancy in vacancies %}
+        <div class="vacancy">
+            <h2><a href="{% url 'vacancy_detail' vacancy.pk %}">{{ vacancy.title }}</a></h2>
+            <p><strong>🏢 Компания:</strong> {{ vacancy.company }}</p>
+            <p><strong>💰 Зарплата:</strong> {{ vacancy.salary }}₸</p>
+            <p><strong>📅 Опыт:</strong> {{ vacancy.experience }} лет</p>
+            <p><strong>📝 Статус:</strong>
+                {% if vacancy.status == 'published' %}
+                    <span class="status status-published">✅ Опубликовано</span>
+                {% elif vacancy.status == 'moderation' %}
+                    <span class="status status-moderation">⏳ На модерации</span>
+                {% else %}
+                    <span class="status status-rejected">❌ Отклонено</span>
+                {% endif %}
+            </p>
+
+            {% if user.is_authenticated and vacancy.author == user %}
+                <div class="vacancy-actions">
+                    <a href="{% url 'vacancy_update' vacancy.pk %}" class="button-edit">✏️ Редактировать</a>
+                    <a href="{% url 'vacancy_delete' vacancy.pk %}" class="button-delete">🗑️ Удалить</a>
+                </div>
+            {% endif %}
+        </div>
+    {% empty %}
+        <div class="no-vacancies">
+            <p>😔 Нет доступных вакансий.</p>
+            {% if not user.is_authenticated %}
+                <p><a href="{% url 'login' %}">Войдите</a>, чтобы создать первую вакансию!</p>
+            {% else %}
+                <p><a href="{% url 'vacancy_create' %}">Создайте первую вакансию</a></p>
+            {% endif %}
+        </div>
+    {% endfor %}
+</section>
+{% endblock %}

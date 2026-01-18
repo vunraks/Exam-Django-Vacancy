@@ -1,0 +1,279 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Мой профиль{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <div class="profile-header">
+        <h1>👤 Мой профиль</h1>
+        <p>Управление вашей учетной записью и вакансиями</p>
+    </div>
+
+    <div class="profile-content">
+        <div class="profile-sidebar">
+            <div class="user-card">
+                <div class="user-avatar">
+                    <div class="avatar-circle">
+                        {{ user.username|first|upper }}
+                    </div>
+                    <h3>{{ user.username }}</h3>
+                    <p class="user-email">{{ user.email|default:"Email не указан" }}</p>
+                </div>
+
+                <div class="user-info">
+                    <div class="info-item">
+                        <span class="label">Имя:</span>
+                        <span class="value">{{ user.first_name|default:"Не указано" }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Фамилия:</span>
+                        <span class="value">{{ user.last_name|default:"Не указано" }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Дата регистрации:</span>
+                        <span class="value">{{ user.date_joined|date:"d.m.Y" }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Последний вход:</span>
+                        <span class="value">{{ user.last_login|date:"d.m.Y H:i"|default:"Никогда" }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-card">
+                <h3>📊 Статистика</h3>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number">{{ stats.total_vacancies }}</div>
+                        <div class="stat-label">Всего вакансий</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" style="color: #28a745;">{{ stats.published_vacancies }}</div>
+                        <div class="stat-label">Опубликовано</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" style="color: #ffc107;">{{ stats.moderation_vacancies }}</div>
+                        <div class="stat-label">На модерации</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" style="color: #dc3545;">{{ stats.rejected_vacancies }}</div>
+                        <div class="stat-label">Отклонено</div>
+                    </div>
+                </div>
+
+                {% if stats.total_vacancies > 0 %}
+                <div class="stats-summary" style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #dee2e6;">
+                    <p style="font-size: 0.9rem; color: #6c757d;">
+                        📈 <strong>Эффективность:</strong>
+                        {% if stats.total_vacancies > 0 %}
+                            {{ stats.published_vacancies|floatformat:0 }} из {{ stats.total_vacancies }} ({{ stats.published_vacancies|floatformat:0 }}%)
+                        {% else %}
+                            0%
+                        {% endif %}
+                        вакансий опубликовано
+                    </p>
+                </div>
+                {% endif %}
+            </div>
+
+        </div>
+
+        <div class="profile-main">
+            <div class="edit-profile-card">
+                <h3>✏️ Редактировать профиль</h3>
+                <form method="post" class="profile-form">
+                    {% csrf_token %}
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="username">Имя пользователя:</label>
+                            <input type="text" id="username" name="username"
+                                   value="{{ user.username }}" class="form-control" required>
+                            <small class="form-text">Изменить можно только если имя свободно</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input type="email" id="email" name="email"
+                                   value="{{ user.email|default:'' }}" class="form-control">
+                            <small class="form-text">Для уведомлений и восстановления пароля</small>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="first_name">Имя:</label>
+                            <input type="text" id="first_name" name="first_name"
+                                   value="{{ user.first_name|default:'' }}" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="last_name">Фамилия:</label>
+                            <input type="text" id="last_name" name="last_name"
+                                   value="{{ user.last_name|default:'' }}" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-save">💾 Сохранить изменения</button>
+                        </a>
+                    </div>
+                </form>
+            </div>
+
+            <div class="my-vacancies">
+                <div class="section-header">
+                    <h3>📋 Мои вакансии ({{ stats.total_vacancies }})</h3>
+                    <div class="vacancy-filters">
+                        <button class="filter-btn active" data-filter="all">Все</button>
+                        <button class="filter-btn" data-filter="published">Опубликованные</button>
+                        <button class="filter-btn" data-filter="moderation">На модерации</button>
+                        <button class="filter-btn" data-filter="rejected">Отклоненные</button>
+                    </div>
+                </div>
+
+                {% if user_vacancies %}
+                    <div class="vacancies-list">
+                        {% for vacancy in user_vacancies %}
+                            <div class="vacancy-item" data-status="{{ vacancy.status }}">
+                                <div class="vacancy-info">
+                                    <h4>
+                                        <a href="{% url 'vacancy_detail' vacancy.pk %}">{{ vacancy.title }}</a>
+                                        <span class="status-badge status-{{ vacancy.status }}">
+                                            {% if vacancy.status == 'published' %}
+                                                <span class="badge-icon">✅</span> Опубликовано
+                                            {% elif vacancy.status == 'moderation' %}
+                                                <span class="badge-icon">⏳</span> На модерации
+                                            {% else %}
+                                                <span class="badge-icon">❌</span> Отклонено
+                                            {% endif %}
+                                        </span>
+                                    </h4>
+                                    <p class="vacancy-meta">
+                                        <span>🏢 {{ vacancy.company }}</span>
+                                        <span>💰 {{ vacancy.salary|default:"Не указана" }} {% if vacancy.salary %}₸{% endif %}</span>
+                                        <span>📅 {{ vacancy.created_at|date:"d.m.Y H:i" }}</span>
+                                        {% if vacancy.experience %}
+                                            <span>⏳ {{ vacancy.experience }}</span>
+                                        {% endif %}
+                                    </p>
+                                    <p class="vacancy-description">
+                                        {{ vacancy.description|truncatechars:150 }}
+                                    </p>
+                                </div>
+                                <div class="vacancy-actions">
+                                    <a href="{% url 'vacancy_detail' vacancy.pk %}" class="btn-view" title="Просмотр">
+                                        👁️ Просмотр
+                                    </a>
+                                    <a href="{% url 'vacancy_update' vacancy.pk %}" class="btn-edit" title="Редактировать">
+                                        ✏️ Редактировать
+                                    </a>
+                                    <a href="{% url 'vacancy_delete' vacancy.pk %}" class="btn-delete" title="Удалить">
+                                        🗑️ Удалить
+                                    </a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="pagination">
+                        <p style="text-align: center; color: #6c757d; font-size: 0.9rem;">
+                            Показано {{ user_vacancies|length }} из {{ stats.total_vacancies }} вакансий
+                        </p>
+                    </div>
+                {% else %}
+                    <div class="no-vacancies">
+                        <div class="empty-state">
+                            <div class="empty-icon">📭</div>
+                            <h4>У вас пока нет вакансий</h4>
+                            <p>Создайте первую вакансию и начните привлекать кандидатов</p>
+                            <a href="{% url 'vacancy_create' %}" class="btn-create-large">
+                                ➕ Создать первую вакансию
+                            </a>
+                            <p style="margin-top: 15px; font-size: 0.9rem;">
+                                <a href="{% url 'vacancy_list' %}">👉 Посмотреть другие вакансии</a>
+                            </p>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Фильтрация вакансий по статусу
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const vacancyItems = document.querySelectorAll('.vacancy-item');
+
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Убираем активный класс у всех кнопок
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                // Добавляем активный класс текущей кнопке
+                this.classList.add('active');
+
+                const filter = this.dataset.filter;
+
+                // Показываем/скрываем вакансии
+                vacancyItems.forEach(item => {
+                    if (filter === 'all' || item.dataset.status === filter) {
+                        item.style.display = 'flex';
+                        setTimeout(() => {
+                            item.style.opacity = '1';
+                            item.style.transform = 'translateX(0)';
+                        }, 10);
+                    } else {
+                        item.style.opacity = '0';
+                        item.style.transform = 'translateX(-20px)';
+                        setTimeout(() => {
+                            item.style.display = 'none';
+                        }, 300);
+                    }
+                });
+            });
+        });
+
+        // Подсветка измененных полей в форме
+        const form = document.querySelector('.profile-form');
+        if (form) {
+            const inputs = form.querySelectorAll('input');
+
+            inputs.forEach(input => {
+                const originalValue = input.value;
+
+                input.addEventListener('input', function() {
+                    if (this.value !== originalValue) {
+                        this.style.borderColor = '#ffc107';
+                        this.style.boxShadow = '0 0 0 3px rgba(255, 193, 7, 0.1)';
+                    } else {
+                        this.style.borderColor = '#e1e5eb';
+                        this.style.boxShadow = 'none';
+                    }
+                });
+            });
+
+            form.addEventListener('submit', function(e) {
+                const submitBtn = this.querySelector('button[type="submit"]');
+                const originalText = submitBtn.textContent;
+                submitBtn.textContent = '💾 Сохраняем...';
+                submitBtn.disabled = true;
+
+                setTimeout(() => {
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                }, 2000);
+            });
+        }
+
+        // Показываем уведомление при пустом списке вакансий
+        const noVacancies = document.querySelector('.no-vacancies');
+        if (noVacancies) {
+            setTimeout(() => {
+                noVacancies.style.opacity = '1';
+                noVacancies.style.transform = 'translateY(0)';
+            }, 500);
+        }
+    });
+</script>
+{% endblock %}

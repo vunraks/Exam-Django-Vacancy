@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Регистрация - Поиск вакансий{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <div class="form-card">
+        <h2>📝 Создать аккаунт</h2>
+        
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert {{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        
+        <form method="post" class="profile-form">
+            {% csrf_token %}
+            
+            {% if form.errors %}
+                <div class="alert error">
+                    Пожалуйста, исправьте ошибки ниже.
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <div>{{ error }}</div>
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+            
+            <div class="form-group">
+                <label for="id_username">Имя пользователя:</label>
+                {{ form.username }}
+                <small class="form-text">Только буквы, цифры и @/./+/-/_.</small>
+                {% if form.username.errors %}
+                    <div class="error-text">{{ form.username.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="id_password1">Пароль:</label>
+                {{ form.password1 }}
+                <small class="form-text">Минимум 8 символов. Не используйте простые пароли.</small>
+                {% if form.password1.errors %}
+                    <div class="error-text">{{ form.password1.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="id_password2">Подтверждение пароля:</label>
+                {{ form.password2 }}
+                <small class="form-text">Повторите пароль для подтверждения.</small>
+                {% if form.password2.errors %}
+                    <div class="error-text">{{ form.password2.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn-save">
+                    <span class="btn-icon">📝</span>
+                    Зарегистрироваться
+                </button>
+                <a href="{% url 'login' %}" class="button-clear">
+                    <span class="btn-icon">🔑</span>
+                    Уже есть аккаунт?
+                </a>
+            </div>
+            
+            <div class="form-links">
+                <p>
+                    <a href="{% url 'home_page' %}">← На главную</a>
+                    <span style="margin: 0 10px;">•</span>
+                    <a href="{% url 'login' %}" style="color: #6c757d;">Войти в аккаунт</a>
+                </p>
+            </div>
+        </form>
+        
+        <div class="terms" style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e9ecef; text-align: center; font-size: 0.9rem; color: #6c757d;">
+            <p>Нажимая "Зарегистрироваться", вы соглашаетесь с нашими 
+                <a href="#" style="color: #007bff;">Условиями использования</a> и 
+                <a href="#" style="color: #007bff;">Политикой конфиденциальности</a>.
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Проверка силы пароля
+    document.addEventListener('DOMContentLoaded', function() {
+        const password1 = document.getElementById('id_password1');
+        const password2 = document.getElementById('id_password2');
+        
+        if (password1 && password2) {
+            // Создаем индикатор силы пароля
+            const strengthDiv = document.createElement('div');
+            strengthDiv.className = 'password-strength';
+            const meter = document.createElement('div');
+            meter.className = 'strength-meter';
+            strengthDiv.appendChild(meter);
+            password1.parentElement.appendChild(strengthDiv);
+            
+            password1.addEventListener('input', function() {
+                const password = this.value;
+                let strength = 0;
+                
+                // Проверяем длину
+                if (password.length >= 8) strength += 25;
+                if (password.length >= 12) strength += 25;
+                
+                // Проверяем наличие разных символов
+                if (/[A-Z]/.test(password)) strength += 25;
+                if (/[0-9]/.test(password)) strength += 25;
+                if (/[^A-Za-z0-9]/.test(password)) strength += 25;
+                
+                // Ограничиваем до 100%
+                strength = Math.min(strength, 100);
+                
+                // Устанавливаем цвет
+                if (strength < 40) {
+                    meter.style.backgroundColor = '#dc3545';
+                } else if (strength < 70) {
+                    meter.style.backgroundColor = '#ffc107';
+                } else {
+                    meter.style.backgroundColor = '#28a745';
+                }
+                
+                meter.style.width = strength + '%';
+                
+                // Проверка совпадения паролей
+                checkPasswordsMatch();
+            });
+            
+            password2.addEventListener('input', checkPasswordsMatch);
+            
+            function checkPasswordsMatch() {
+                if (password1.value && password2.value) {
+                    if (password1.value === password2.value) {
+                        password2.style.borderColor = '#28a745';
+                        password2.style.boxShadow = '0 0 0 3px rgba(40, 167, 69, 0.1)';
+                    } else {
+                        password2.style.borderColor = '#dc3545';
+                        password2.style.boxShadow = '0 0 0 3px rgba(220, 53, 69, 0.1)';
+                    }
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

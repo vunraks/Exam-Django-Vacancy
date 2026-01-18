@@ -1,0 +1,216 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Все вакансии - Поиск вакансий{% endblock %}
+
+{% block content %}
+<div class="vacancies-container">
+    <!-- Заголовок страницы -->
+    <div class="page-header">
+        <h1>📋 Все вакансии</h1>
+        <p>Найдите работу своей мечты среди тысяч предложений</p>
+    </div>
+    
+    <!-- Поиск и фильтры -->
+    <div class="vacancy-controls">
+        <div class="search-box">
+            <form method="GET" action="{% url 'vacancy_list' %}" class="search-form">
+                <input type="text" name="search" placeholder="Поиск по названию или компании..." 
+                       value="{{ request.GET.search }}" class="search-input">
+                <button type="submit" class="search-btn">🔍 Найти</button>
+                {% if request.GET.search %}
+                    <a href="{% url 'vacancy_list' %}" class="clear-btn">🗑️ Очистить</a>
+                {% endif %}
+            </form>
+        </div>
+        
+        <div class="action-buttons">
+            {% if user.is_authenticated %}
+                <a href="{% url 'vacancy_create' %}" class="btn-add-vacancy">
+                    ➕ Добавить вакансию
+                </a>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn-add-vacancy" title="Войдите, чтобы добавить вакансию">
+                    🔒 Добавить вакансию
+                </a>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Статистика -->
+    <div class="vacancy-stats">
+        <div class="stat-item">
+            <span class="stat-number">{{ vacancies.count }}</span>
+            <span class="stat-label">Всего вакансий</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-number">{{ vacancies|length }}</span>
+            <span class="stat-label">Показано</span>
+        </div>
+    </div>
+    
+    <!-- Список вакансий -->
+    <div class="vacancies-list">
+        {% if vacancies %}
+            {% for vacancy in vacancies %}
+                <div class="vacancy-card">
+                    <div class="vacancy-header">
+                        <div class="vacancy-title-section">
+                            <h3>
+                                <a href="{% url 'vacancy_detail' vacancy.pk %}" class="vacancy-title">
+                                    {{ vacancy.title }}
+                                </a>
+                                {% if vacancy.status == 'published' %}
+                                    <span class="status-badge published">✅ Опубликовано</span>
+                                {% elif vacancy.status == 'moderation' %}
+                                    <span class="status-badge moderation">⏳ На модерации</span>
+                                {% else %}
+                                    <span class="status-badge rejected">❌ Отклонено</span>
+                                {% endif %}
+                            </h3>
+                            <div class="vacancy-company">
+                                <span class="company-icon">🏢</span>
+                                {{ vacancy.company }}
+                                {% if vacancy.location %}
+                                    <span class="location">
+                                        <span class="location-icon">📍</span>
+                                        {{ vacancy.location }}
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="vacancy-salary">
+                            {% if vacancy.salary %}
+                                <span class="salary-amount">💰 {{ vacancy.salary }} ₸</span>
+                            {% else %}
+                                <span class="salary-amount">💰 По договоренности</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="vacancy-body">
+                        <div class="vacancy-description">
+                            <p>{{ vacancy.description|truncatechars:200 }}</p>
+                        </div>
+                        
+                        <div class="vacancy-details">
+                            {% if vacancy.experience %}
+                                <span class="detail-item">
+                                    <span class="detail-icon">⏳</span>
+                                    Опыт: {{ vacancy.experience }}
+                                </span>
+                            {% endif %}
+                            
+                            <span class="detail-item">
+                                <span class="detail-icon">📅</span>
+                                Добавлено: {{ vacancy.created_at|date:"d.m.Y" }}
+                            </span>
+                            
+                            {% if vacancy.author %}
+                                <span class="detail-item">
+                                    <span class="detail-icon">👤</span>
+                                    Автор: {{ vacancy.author.username }}
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="vacancy-footer">
+                        <div class="vacancy-actions">
+                            <a href="{% url 'vacancy_detail' vacancy.pk %}" class="btn-view">
+                                👁️ Подробнее
+                            </a>
+                            
+                            {% if user.is_authenticated and vacancy.author == user %}
+                                <a href="{% url 'vacancy_update' vacancy.pk %}" class="btn-edit">
+                                    ✏️ Редактировать
+                                </a>
+                                <a href="{% url 'vacancy_delete' vacancy.pk %}" class="btn-delete">
+                                    🗑️ Удалить
+                                </a>
+                            {% endif %}
+                            
+                            {% if user.is_authenticated and user != vacancy.author %}
+                                <button class="btn-apply" onclick="applyForVacancy({{ vacancy.pk }})">
+                                    📨 Откликнуться
+                                </button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <!-- Сообщение, если вакансий нет -->
+            <div class="no-vacancies">
+                <div class="empty-state">
+                    <div class="empty-icon">📭</div>
+                    <h3>Вакансий не найдено</h3>
+                    <p>
+                        {% if request.GET.search %}
+                            По запросу "{{ request.GET.search }}" ничего не найдено.
+                        {% else %}
+                            Пока нет доступных вакансий. Будьте первым, кто добавит вакансию!
+                        {% endif %}
+                    </p>
+                    <div class="empty-actions">
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'vacancy_create' %}" class="btn-add-vacancy-large">
+                                ➕ Добавить первую вакансию
+                            </a>
+                        {% else %}
+                            <a href="{% url 'register' %}" class="btn-add-vacancy-large">
+                                📝 Зарегистрироваться
+                            </a>
+                            <a href="{% url 'login' %}" class="btn-login">
+                                🔑 Войти
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    
+    <!-- Пагинация (если нужно) -->
+    {% if vacancies.has_other_pages %}
+    <div class="pagination">
+        <span class="step-links">
+            {% if vacancies.has_previous %}
+                <a href="?page=1{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">« Первая</a>
+                <a href="?page={{ vacancies.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">‹ Назад</a>
+            {% endif %}
+            
+            <span class="current">
+                Страница {{ vacancies.number }} из {{ vacancies.paginator.num_pages }}
+            </span>
+            
+            {% if vacancies.has_next %}
+                <a href="?page={{ vacancies.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">Вперед ›</a>
+                <a href="?page={{ vacancies.paginator.num_pages }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">Последняя »</a>
+            {% endif %}
+        </span>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    // Функция для отклика на вакансию
+    function applyForVacancy(vacancyId) {
+        if(confirm('Вы хотите откликнуться на эту вакансию?')) {
+            // Здесь можно добавить AJAX запрос
+            alert('Ваш отклик отправлен! Работодатель свяжется с вами.');
+        }
+    }
+    
+    // Анимация при загрузке
+    document.addEventListener('DOMContentLoaded', function() {
+        // Подсветка активного поиска
+        const searchInput = document.querySelector('.search-input');
+        if (searchInput && searchInput.value) {
+            searchInput.style.borderColor = '#28a745';
+            searchInput.style.boxShadow = '0 0 0 3px rgba(40, 167, 69, 0.1)';
+        }
+    });
+</script>
+{% endblock %}
