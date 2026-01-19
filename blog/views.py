@@ -1,3 +1,5 @@
+from django.core.paginator import Paginator
+from django.db.models import Q
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
@@ -205,29 +207,93 @@ def job_detail(request, job_id):
 
 
 # Главная страница
+# views.py
+from django.core.paginator import Paginator
+from django.shortcuts import render
+from .models import Vacancy
+
+# views.py
+from django.core.paginator import Paginator
+from django.shortcuts import render
+from .models import Vacancy
+
+
 def home_page(request):
-    vacancies = Vacancy.objects.filter(status='published')
+    # Получаем опубликованные вакансии
+    vacancies_list = Vacancy.objects.filter(status='published')
 
     # Фильтрация
-    selected_salary = request.GET.get('salary')
-    selected_experience = request.GET.get('experience')
+    search = request.GET.get('search', '')
+    salary = request.GET.get('salary', '')
+    experience = request.GET.get('experience', '')
 
-    if selected_salary:
-        vacancies = vacancies.filter(salary=selected_salary)
-    if selected_experience:
-        vacancies = vacancies.filter(experience=selected_experience)
+    if search:
+        vacancies_list = vacancies_list.filter(
+            models.Q(title__icontains=search) |
+            models.Q(company__icontains=search)
+        )
 
-    salaries = Vacancy.objects.values_list('salary', flat=True).distinct().order_by('salary')
-    experiences = Vacancy.objects.values_list('experience', flat=True).distinct().order_by('experience')
+    if salary:
+        vacancies_list = vacancies_list.filter(salary__gte=salary)
+
+    if experience:
+        vacancies_list = vacancies_list.filter(experience__gte=experience)
+
+    # ПАГИНАЦИЯ - вот здесь меняйте число!
+    paginator = Paginator(vacancies_list, 3)  # ← ИЗМЕНИТЕ 5 на нужное количество
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    # Уникальные значения для фильтров
+    salaries = sorted(set(Vacancy.objects.filter(status='published')
+                          .values_list('salary', flat=True)
+                          .exclude(salary__isnull=True)))
+    experiences = sorted(set(Vacancy.objects.filter(status='published')
+                             .values_list('experience', flat=True)
+                             .exclude(experience__isnull=True)))
 
     context = {
-        'vacancies': vacancies,
+        'vacancies': page_obj,  # Для совместимости со старым кодом
+        'page_obj': page_obj,  # Для пагинации
         'salaries': salaries,
         'experiences': experiences,
-        'selected_salary': selected_salary,
-        'selected_experience': selected_experience,
+        'selected_salary': salary,
+        'selected_experience': experience,
+        'search_query': search,
     }
+
     return render(request, 'home.html', context)
+
+
+def vacancy_list(request):
+    """Страница 'Все вакансии' с пагинацией"""
+    # Получаем все опубликованные вакансии
+    vacancies_list = Vacancy.objects.filter(status='published')
+
+    # Поиск
+    search = request.GET.get('search', '')
+    if search:
+        vacancies_list = vacancies_list.filter(
+            models.Q(title__icontains=search) |
+            models.Q(company__icontains=search) |
+            models.Q(description__icontains=search)
+        )
+
+    # Сортировка по дате (сначала новые)
+    vacancies_list = vacancies_list.order_by('-created_at')
+
+    # Пагинация - 12 вакансий на страницу
+    paginator = Paginator(vacancies_list, 2)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'vacancies': page_obj,
+        'page_obj': page_obj,
+        'search_query': search,
+    }
+
+    return render(request, 'vacancy_list.html', context)
 
 
 # О нас

@@ -93,6 +93,7 @@ nav ul li a:hover {
     max-width: 1200px;
     margin: 20px auto;
     padding: 0 20px;
+
 }
 
 .alert {
@@ -716,6 +717,9 @@ nav ul li a:hover {
 .button-edit {
     background: linear-gradient(135deg, #ffc107, #e0a800);
     color: #212529;
+    border-radius: 10px;
+    text-decoration: none;
+
 }
 
 .button-edit:hover {
@@ -727,6 +731,9 @@ nav ul li a:hover {
 .button-delete {
     background: linear-gradient(135deg, #dc3545, #c82333);
     color: white;
+    border-radius: 5px;
+    text-decoration: none;    border-radius: 10px;
+
 }
 
 .button-delete:hover {
@@ -1911,14 +1918,14 @@ footer {
     }
 
     .step-links a:hover {
-        background: #6f42c1;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
         transform: translateY(-2px);
     }
 
     .current {
         padding: 10px 20px;
-        background: #6f42c1;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white !important;
         border-radius: 8px;
         font-weight: 500;
@@ -2044,15 +2051,11 @@ footer {
         margin: 0 5px;
     }
 
-    .current {
-        color: #495057;
-        font-weight: 500;
-    }
+
 
     /* Заголовок вакансии */
     .vacancy-header {
-        background: linear-gradient(135deg, #2c3e50, #4a8578);
-
+        background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
         color: white;
         padding: 40px;
         border-radius: 15px;
@@ -2527,3 +2530,431 @@ footer {
     .stats-card, .similar-vacancies {
         animation: fadeIn 0.6s ease-out;
     }
+
+
+/* static/css/vacancy_form.css */
+
+/* Основные стили контейнера */
+.form-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 0 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Заголовок формы */
+.form-container h2 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 35px;
+    font-size: 32px;
+    font-weight: 700;
+    padding-bottom: 15px;
+    position: relative;
+}
+
+.form-container h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, #007bff, #00c6ff);
+    border-radius: 2px;
+}
+
+/* Стили формы */
+.vacancy-form {
+    background: white;
+    padding: 50px 40px;
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+    border: 1px solid #eef2f7;
+    transition: all 0.3s ease;
+}
+
+.vacancy-form:hover {
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+}
+
+/* Группы полей формы */
+.vacancy-form > div {
+    margin-bottom: 30px;
+    position: relative;
+}
+
+.vacancy-form > div:last-of-type {
+    margin-bottom: 40px;
+}
+
+/* Стили для label */
+.vacancy-form label {
+    display: block;
+    margin-bottom: 10px;
+    color: #2c3e50;
+    font-weight: 600;
+    font-size: 16px;
+    transition: color 0.3s;
+}
+
+.vacancy-form label::after {
+    content: ' *';
+    color: #dc3545;
+    font-weight: bold;
+}
+
+.vacancy-form label.optional::after {
+    content: ' (опционально)';
+    color: #6c757d;
+    font-weight: normal;
+    font-size: 14px;
+}
+
+/* Стили для полей ввода */
+.vacancy-form input[type="text"],
+.vacancy-form input[type="number"],
+.vacancy-form textarea,
+.vacancy-form select {
+    width: 100%;
+    padding: 16px 20px;
+    border: 2px solid #e1e5eb;
+    border-radius: 12px;
+    font-size: 16px;
+    font-family: inherit;
+    transition: all 0.3s ease;
+    background-color: #f8fafc;
+    color: #495057;
+    box-sizing: border-box;
+}
+
+.vacancy-form textarea {
+    min-height: 180px;
+    resize: vertical;
+    line-height: 1.6;
+}
+
+.vacancy-form input[type="text"]:focus,
+.vacancy-form input[type="number"]:focus,
+.vacancy-form textarea:focus,
+.vacancy-form select:focus {
+    outline: none;
+    border-color: #007bff;
+    background-color: white;
+    box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+.vacancy-form input[type="text"]::placeholder,
+.vacancy-form input[type="number"]::placeholder,
+.vacancy-form textarea::placeholder {
+    color: #adb5bd;
+}
+
+/* Стили для ошибок валидации */
+.vacancy-form .error {
+    color: #dc3545;
+    font-size: 14px;
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.vacancy-form .error::before {
+    content: '⚠️';
+    font-size: 12px;
+}
+
+.vacancy-form input.error-input,
+.vacancy-form textarea.error-input,
+.vacancy-form select.error-input {
+    border-color: #dc3545;
+    background-color: #fff5f5;
+}
+
+.vacancy-form input.error-input:focus,
+.vacancy-form textarea.error-input:focus,
+.vacancy-form select.error-input:focus {
+    box-shadow: 0 0 0 4px rgba(220, 53, 69, 0.1);
+}
+
+/* Стили для кнопки */
+.vacancy-form button[type="submit"] {
+    width: 100%;
+    padding: 18px;
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.vacancy-form button[type="submit"]::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.vacancy-form button[type="submit"]:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.vacancy-form button[type="submit"]:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0, 123, 255, 0.3);
+    background: linear-gradient(135deg, #0056b3, #004085);
+}
+
+.vacancy-form button[type="submit"]:active {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.2);
+}
+
+.vacancy-form button[type="submit"]:disabled {
+    background: #6c757d;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Иконка на кнопке */
+.vacancy-form button[type="submit"]::after {
+    content: '📝';
+    margin-right: 10px;
+    font-size: 20px;
+}
+
+/* Подсказки для полей */
+.field-hint {
+    display: block;
+    margin-top: 8px;
+    font-size: 14px;
+    color: #6c757d;
+    font-style: italic;
+}
+
+.field-hint::before {
+    content: '💡 ';
+}
+
+/* Счетчик символов для текстовых полей */
+.char-counter {
+    text-align: right;
+    font-size: 14px;
+    color: #6c757d;
+    margin-top: 5px;
+}
+
+.char-counter.warning {
+    color: #ffc107;
+}
+
+.char-counter.error {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+/* Стили для успешного сообщения */
+.success-message {
+    background: linear-gradient(135deg, #d4edda, #c3e6cb);
+    color: #155724;
+    padding: 20px;
+    border-radius: 12px;
+    border-left: 5px solid #28a745;
+    margin-bottom: 30px;
+    text-align: center;
+    font-weight: 500;
+}
+
+.success-message::before {
+    content: '✅ ';
+    font-size: 20px;
+}
+
+/* Анимация загрузки */
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.loading {
+    animation: pulse 1.5s infinite;
+    position: relative;
+}
+
+.loading::after {
+    content: 'Отправка...';
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .form-container {
+        padding: 0 15px;
+        margin: 20px auto;
+    }
+
+    .vacancy-form {
+        padding: 30px 20px;
+        border-radius: 16px;
+    }
+
+    .form-container h2 {
+        font-size: 26px;
+        margin-bottom: 25px;
+    }
+
+    .vacancy-form input[type="text"],
+    .vacancy-form input[type="number"],
+    .vacancy-form textarea,
+    .vacancy-form select {
+        padding: 14px 16px;
+        font-size: 15px;
+    }
+
+    .vacancy-form textarea {
+        min-height: 150px;
+    }
+
+    .vacancy-form button[type="submit"] {
+        padding: 16px;
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .form-container h2 {
+        font-size: 22px;
+    }
+
+    .vacancy-form {
+        padding: 25px 15px;
+    }
+
+    .vacancy-form > div {
+        margin-bottom: 20px;
+    }
+
+    .vacancy-form label {
+        font-size: 15px;
+        margin-bottom: 8px;
+    }
+}
+
+
+
+/* Стили для пагинации */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 40px 0 20px;
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.pagination-links {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.pagination .page-item {
+    list-style: none;
+}
+
+.pagination .page-link {
+    display: block;
+    padding: 10px 16px;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s;
+    min-width: 45px;
+    text-align: center;
+}
+
+.pagination .page-link:hover {
+    background-color: #e9ecef;
+    border-color: #dee2e6;
+    transform: translateY(-2px);
+}
+
+.pagination .page-item.active .page-link {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    border-color: #007bff;
+    box-shadow: 0 4px 12px rgba(0,123,255,0.2);
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #6c757d;
+    pointer-events: none;
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+}
+
+.pagination-info {
+    text-align: center;
+    margin-top: 15px;
+    color: #6c757d;
+    font-size: 14px;
+}
+
+.pagination-info strong {
+    color: #495057;
+}
+
+/* Стиль для кнопок Вперед/Назад */
+.pagination-arrow {
+    padding: 10px 20px;
+    font-weight: bold;
+}
+
+/* Адаптивность пагинации */
+@media (max-width: 768px) {
+    .pagination-links {
+        gap: 5px;
+    }
+
+    .pagination .page-link {
+        padding: 8px 12px;
+        min-width: 40px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 576px) {
+    .pagination-links {
+        gap: 3px;
+    }
+
+    .pagination .page-link {
+        padding: 6px 10px;
+        min-width: 36px;
+        font-size: 13px;
+    }
+}

@@ -3,6 +3,10 @@
 
 {% block title %}Все вакансии - Поиск вакансий{% endblock %}
 
+{% block extra_head %}
+
+{% endblock %}
+
 {% block content %}
 <div class="vacancies-container">
     <!-- Заголовок страницы -->
@@ -10,12 +14,12 @@
         <h1>📋 Все вакансии</h1>
         <p>Найдите работу своей мечты среди тысяч предложений</p>
     </div>
-    
+
     <!-- Поиск и фильтры -->
     <div class="vacancy-controls">
         <div class="search-box">
             <form method="GET" action="{% url 'vacancy_list' %}" class="search-form">
-                <input type="text" name="search" placeholder="Поиск по названию или компании..." 
+                <input type="text" name="search" placeholder="Поиск по названию или компании..."
                        value="{{ request.GET.search }}" class="search-input">
                 <button type="submit" class="search-btn">🔍 Найти</button>
                 {% if request.GET.search %}
@@ -23,7 +27,7 @@
                 {% endif %}
             </form>
         </div>
-        
+
         <div class="action-buttons">
             {% if user.is_authenticated %}
                 <a href="{% url 'vacancy_create' %}" class="btn-add-vacancy">
@@ -36,64 +40,86 @@
             {% endif %}
         </div>
     </div>
-    
+
     <!-- Статистика -->
     <div class="vacancy-stats">
         <div class="stat-item">
-            <span class="stat-number">{{ vacancies.count }}</span>
+            <span class="stat-number">
+                {% if page_obj %}
+                    {{ page_obj.paginator.count }}
+                {% else %}
+                    {{ vacancies|length }}
+                {% endif %}
+            </span>
             <span class="stat-label">Всего вакансий</span>
         </div>
         <div class="stat-item">
-            <span class="stat-number">{{ vacancies|length }}</span>
+            <span class="stat-number">
+                {% if page_obj %}
+                    {{ page_obj|length }}
+                {% else %}
+                    {{ vacancies|length }}
+                {% endif %}
+            </span>
             <span class="stat-label">Показано</span>
         </div>
+        <div class="stat-item">
+            <span class="stat-number">
+                {% if page_obj %}
+                    {{ page_obj.number }}
+                {% else %}
+                    1
+                {% endif %}
+            </span>
+            <span class="stat-label">Страница</span>
+        </div>
     </div>
-    
-    <!-- Список вакансий -->
+
+    <!-- Список вакансий с рандомными цветами -->
     <div class="vacancies-list">
-        {% if vacancies %}
-            {% for vacancy in vacancies %}
-                <div class="vacancy-card">
+        {% if page_obj %}
+            {% for vacancy in page_obj %}
+                <!-- Вычисляем рандомный цвет на основе ID вакансии и номера в списке -->
+                {% with color_num=forloop.counter|add:vacancy.pk|add:0|divisibleby:6|add:1 %}
+                <div class="vacancy-card color-{{ color_num }}">
                     <div class="vacancy-header">
-                        <div class="vacancy-title-section">
-                            <h3>
-                                <a href="{% url 'vacancy_detail' vacancy.pk %}" class="vacancy-title">
-                                    {{ vacancy.title }}
-                                </a>
-                                {% if vacancy.status == 'published' %}
-                                    <span class="status-badge published">✅ Опубликовано</span>
-                                {% elif vacancy.status == 'moderation' %}
-                                    <span class="status-badge moderation">⏳ На модерации</span>
-                                {% else %}
-                                    <span class="status-badge rejected">❌ Отклонено</span>
-                                {% endif %}
-                            </h3>
-                            <div class="vacancy-company">
-                                <span class="company-icon">🏢</span>
-                                {{ vacancy.company }}
-                                {% if vacancy.location %}
-                                    <span class="location">
-                                        <span class="location-icon">📍</span>
-                                        {{ vacancy.location }}
-                                    </span>
-                                {% endif %}
-                            </div>
-                        </div>
-                        
-                        <div class="vacancy-salary">
-                            {% if vacancy.salary %}
-                                <span class="salary-amount">💰 {{ vacancy.salary }} ₸</span>
+                        <h3>
+                            <a href="{% url 'vacancy_detail' vacancy.pk %}" class="vacancy-title">
+                                {{ vacancy.title }}
+                            </a>
+                            {% if vacancy.status == 'published' %}
+                                <span class="status-badge published">✅ Опубликовано</span>
+                            {% elif vacancy.status == 'moderation' %}
+                                <span class="status-badge moderation">⏳ На модерации</span>
                             {% else %}
-                                <span class="salary-amount">💰 По договоренности</span>
+                                <span class="status-badge rejected">❌ Отклонено</span>
+                            {% endif %}
+                        </h3>
+                        <div class="vacancy-company">
+                            <span class="company-icon">🏢</span>
+                            {{ vacancy.company }}
+                            {% if vacancy.location %}
+                                <span class="location">
+                                    <span class="location-icon">📍</span>
+                                    {{ vacancy.location }}
+                                </span>
                             {% endif %}
                         </div>
                     </div>
-                    
+
+                    <div class="vacancy-salary">
+                        {% if vacancy.salary %}
+                            <span class="salary-amount">💰 {{ vacancy.salary }} ₸</span>
+                        {% else %}
+                            <span class="salary-amount">💰 По договоренности</span>
+                        {% endif %}
+                    </div>
+
                     <div class="vacancy-body">
                         <div class="vacancy-description">
                             <p>{{ vacancy.description|truncatechars:200 }}</p>
                         </div>
-                        
+
                         <div class="vacancy-details">
                             {% if vacancy.experience %}
                                 <span class="detail-item">
@@ -101,12 +127,12 @@
                                     Опыт: {{ vacancy.experience }}
                                 </span>
                             {% endif %}
-                            
+
                             <span class="detail-item">
                                 <span class="detail-icon">📅</span>
                                 Добавлено: {{ vacancy.created_at|date:"d.m.Y" }}
                             </span>
-                            
+
                             {% if vacancy.author %}
                                 <span class="detail-item">
                                     <span class="detail-icon">👤</span>
@@ -115,13 +141,13 @@
                             {% endif %}
                         </div>
                     </div>
-                    
+
                     <div class="vacancy-footer">
                         <div class="vacancy-actions">
                             <a href="{% url 'vacancy_detail' vacancy.pk %}" class="btn-view">
                                 👁️ Подробнее
                             </a>
-                            
+
                             {% if user.is_authenticated and vacancy.author == user %}
                                 <a href="{% url 'vacancy_update' vacancy.pk %}" class="btn-edit">
                                     ✏️ Редактировать
@@ -130,7 +156,7 @@
                                     🗑️ Удалить
                                 </a>
                             {% endif %}
-                            
+
                             {% if user.is_authenticated and user != vacancy.author %}
                                 <button class="btn-apply" onclick="applyForVacancy({{ vacancy.pk }})">
                                     📨 Откликнуться
@@ -139,6 +165,7 @@
                         </div>
                     </div>
                 </div>
+                {% endwith %}
             {% endfor %}
         {% else %}
             <!-- Сообщение, если вакансий нет -->
@@ -171,23 +198,23 @@
             </div>
         {% endif %}
     </div>
-    
-    <!-- Пагинация (если нужно) -->
-    {% if vacancies.has_other_pages %}
+
+    <!-- Пагинация -->
+    {% if page_obj.has_other_pages %}
     <div class="pagination">
         <span class="step-links">
-            {% if vacancies.has_previous %}
+            {% if page_obj.has_previous %}
                 <a href="?page=1{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">« Первая</a>
-                <a href="?page={{ vacancies.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">‹ Назад</a>
+                <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">‹ Назад</a>
             {% endif %}
-            
+
             <span class="current">
-                Страница {{ vacancies.number }} из {{ vacancies.paginator.num_pages }}
+                Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
             </span>
-            
-            {% if vacancies.has_next %}
-                <a href="?page={{ vacancies.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">Вперед ›</a>
-                <a href="?page={{ vacancies.paginator.num_pages }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">Последняя »</a>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">Вперед ›</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">Последняя »</a>
             {% endif %}
         </span>
     </div>
@@ -202,7 +229,7 @@
             alert('Ваш отклик отправлен! Работодатель свяжется с вами.');
         }
     }
-    
+
     // Анимация при загрузке
     document.addEventListener('DOMContentLoaded', function() {
         // Подсветка активного поиска
@@ -211,6 +238,19 @@
             searchInput.style.borderColor = '#28a745';
             searchInput.style.boxShadow = '0 0 0 3px rgba(40, 167, 69, 0.1)';
         }
+
+        // Анимация появления карточек
+        const cards = document.querySelectorAll('.vacancy-card');
+        cards.forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+
+            setTimeout(() => {
+                card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, index * 100);
+        });
     });
 </script>
 {% endblock %}
