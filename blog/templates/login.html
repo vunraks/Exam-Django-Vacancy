@@ -6,7 +6,7 @@
 {% block content %}
 <div class="form-container">
     <div class="form-card">
-        <h2>🔑 Вход в систему </h2>
+        <h2>Вход в систему </h2>
         
         {% if messages %}
             {% for message in messages %}
@@ -41,11 +41,11 @@
             
             <div class="form-actions">
                 <button type="submit" class="btn-save">
-                    <span class="btn-icon">🔑</span>
+                    <span class="btn-icon"></span>
                     Войти
                 </button>
                 <a href="{% url 'register' %}" class="button-clear">
-                    <span class="btn-icon">📝</span>
+                    <span class="btn-icon"></span>
                     Регистрация
                 </a>
             </div>

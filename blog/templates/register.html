@@ -6,7 +6,7 @@
 {% block content %}
 <div class="form-container">
     <div class="form-card">
-        <h2>📝 Создать аккаунт</h2>
+        <h2>Создать аккаунт</h2>
         
         {% if messages %}
             {% for message in messages %}
@@ -57,11 +57,11 @@
             
             <div class="form-actions">
                 <button type="submit" class="btn-save">
-                    <span class="btn-icon">📝</span>
+                    <span class="btn-icon"></span>
                     Зарегистрироваться
                 </button>
                 <a href="{% url 'login' %}" class="button-clear">
-                    <span class="btn-icon">🔑</span>
+                    <span class="btn-icon"></span>
                     Уже есть аккаунт?
                 </a>
             </div>
