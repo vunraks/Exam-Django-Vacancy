@@ -1,5 +1,5 @@
 from django import forms
-from .models import Vacancy
+from .models import Vacancy, Profile
 
 
 class VacancyForm(forms.ModelForm):
@@ -13,4 +13,13 @@ class VacancyForm(forms.ModelForm):
             'location': 'Местоположение',
             'salary': 'Зарплата',
             'experience': 'Опыт работы',
+        }
+
+
+class ProfileAvatarForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['avatar']
+        widgets = {
+            'avatar': forms.ClearableFileInput(attrs={'accept': 'image/*'}),
         }

@@ -14,9 +14,13 @@
         <div class="profile-sidebar">
             <div class="user-card">
                 <div class="user-avatar">
-                    <div class="avatar-circle">
-                        {{ user.username|first|upper }}
-                    </div>
+                    {% if profile.avatar %}
+                        <img class="avatar-image" src="{{ profile.avatar.url }}" alt="Аватар">
+                    {% else %}
+                        <div class="avatar-circle">
+                            {{ user.username|first|upper }}
+                        </div>
+                    {% endif %}
                     <h3>{{ user.username }}</h3>
                     <p class="user-email">{{ user.email|default:"Email не указан" }}</p>
                 </div>
@@ -82,8 +86,16 @@
         <div class="profile-main">
             <div class="edit-profile-card">
                 <h3>✏️ Редактировать профиль</h3>
-                <form method="post" class="profile-form">
+                <form method="post" class="profile-form" enctype="multipart/form-data">
                     {% csrf_token %}
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="avatar">Аватар:</label>
+                            <input type="file" id="avatar" name="avatar" class="form-control" accept="image/*">
+                            <small class="form-text">PNG/JPG, рекомендуемый размер: 200×200</small>
+                        </div>
+                    </div>
 
                     <div class="form-row">
                         <div class="form-group">
@@ -123,11 +135,14 @@
             <div class="my-vacancies">
                 <div class="section-header">
                     <h3>📋 Мои вакансии ({{ stats.total_vacancies }})</h3>
-                    <div class="vacancy-filters">
-                        <button class="filter-btn active" data-filter="all">Все</button>
-                        <button class="filter-btn" data-filter="published">Опубликованные</button>
-                        <button class="filter-btn" data-filter="moderation">На модерации</button>
-                        <button class="filter-btn" data-filter="rejected">Отклоненные</button>
+                    <div class="section-header-actions">
+                        <a href="{% url 'vacancy_create' %}" class="btn-create-vacancy">➕ Создать вакансию</a>
+                        <div class="vacancy-filters">
+                            <button class="filter-btn active" data-filter="all">Все</button>
+                            <button class="filter-btn" data-filter="published">Опубликованные</button>
+                            <button class="filter-btn" data-filter="moderation">На модерации</button>
+                            <button class="filter-btn" data-filter="rejected">Отклоненные</button>
+                        </div>
                     </div>
                 </div>
 

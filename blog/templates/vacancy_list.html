@@ -11,7 +11,7 @@
 <div class="vacancies-container">
     <!-- Заголовок страницы -->
     <div class="page-header">
-        <h1>📋 Все вакансии</h1>
+        <h1>Все вакансии</h1>
         <p>Найдите работу своей мечты среди тысяч предложений</p>
     </div>
 
@@ -21,9 +21,9 @@
             <form method="GET" action="{% url 'vacancy_list' %}" class="search-form">
                 <input type="text" name="search" placeholder="Поиск по названию или компании..."
                        value="{{ request.GET.search }}" class="search-input">
-                <button type="submit" class="search-btn">🔍 Найти</button>
+                <button type="submit" class="search-btn">Найти</button>
                 {% if request.GET.search %}
-                    <a href="{% url 'vacancy_list' %}" class="clear-btn">🗑️ Очистить</a>
+                    <a href="{% url 'vacancy_list' %}" class="clear-btn">Очистить</a>
                 {% endif %}
             </form>
         </div>
@@ -31,11 +31,11 @@
         <div class="action-buttons">
             {% if user.is_authenticated %}
                 <a href="{% url 'vacancy_create' %}" class="btn-add-vacancy">
-                    ➕ Добавить вакансию
+                    Добавить вакансию
                 </a>
             {% else %}
                 <a href="{% url 'login' %}" class="btn-add-vacancy" title="Войдите, чтобы добавить вакансию">
-                    🔒 Добавить вакансию
+                    Добавить вакансию
                 </a>
             {% endif %}
         </div>
@@ -88,11 +88,11 @@
                                 {{ vacancy.title }}
                             </a>
                             {% if vacancy.status == 'published' %}
-                                <span class="status-badge published">✅ Опубликовано</span>
+                                <span class="status-badge published">Опубликовано</span>
                             {% elif vacancy.status == 'moderation' %}
-                                <span class="status-badge moderation">⏳ На модерации</span>
+                                <span class="status-badge moderation">На модерации</span>
                             {% else %}
-                                <span class="status-badge rejected">❌ Отклонено</span>
+                                <span class="status-badge rejected">Отклонено</span>
                             {% endif %}
                         </h3>
                         <div class="vacancy-company">
@@ -145,15 +145,15 @@
                     <div class="vacancy-footer">
                         <div class="vacancy-actions">
                             <a href="{% url 'vacancy_detail' vacancy.pk %}" class="btn-view">
-                                👁️ Подробнее
+                                Подробнее
                             </a>
 
                             {% if user.is_authenticated and vacancy.author == user %}
                                 <a href="{% url 'vacancy_update' vacancy.pk %}" class="btn-edit">
-                                    ✏️ Редактировать
+                                    Редактировать
                                 </a>
                                 <a href="{% url 'vacancy_delete' vacancy.pk %}" class="btn-delete">
-                                    🗑️ Удалить
+                                    Удалить
                                 </a>
                             {% endif %}
 

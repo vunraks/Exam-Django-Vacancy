@@ -5,8 +5,8 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .forms import VacancyForm
-from .models import Category, Job, Vacancy
+from .forms import VacancyForm, ProfileAvatarForm
+from .models import Category, Job, Vacancy, Profile
 
 
 # ==================== АУТЕНТИФИКАЦИЯ ====================
@@ -60,6 +60,7 @@ def logout_view(request):
 # Профиль пользователя
 @login_required
 def profile_view(request):
+    profile, _ = Profile.objects.get_or_create(user=request.user)
     try:
         # Получаем вакансии текущего пользователя
         user_vacancies = Vacancy.objects.filter(author=request.user)
@@ -85,6 +86,16 @@ def profile_view(request):
 
     # Обновление профиля
     if request.method == 'POST':
+        # Загрузка аватара (если прислали файл)
+        if request.FILES.get('avatar'):
+            avatar_form = ProfileAvatarForm(request.POST, request.FILES, instance=profile)
+            if avatar_form.is_valid():
+                avatar_form.save()
+                messages.success(request, 'Аватар успешно обновлен!')
+                return redirect('profile')
+            else:
+                messages.error(request, 'Не удалось загрузить аватар. Проверьте файл.')
+
         user = request.user
         new_username = request.POST.get('username')
         new_email = request.POST.get('email')
@@ -114,6 +125,7 @@ def profile_view(request):
         'user_vacancies': user_vacancies,
         'stats': stats,
         'user': request.user,
+        'profile': profile,
     }
     return render(request, 'profile.html', context)
 

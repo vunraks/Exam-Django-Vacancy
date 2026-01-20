@@ -9,18 +9,37 @@ body {
     font-family: 'Segoe UI', Arial, sans-serif;
     line-height: 1.6;
     color: #333;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    background: #f5f6f8;
     min-height: 100vh;
+}
+
+:root {
+    --bg: #f5f6f8;
+    --surface: #ffffff;
+    --surface-2: #f8fafc;
+    --border: #e5e7eb;
+    --text: #111827;
+    --muted: #6b7280;
+    --muted-2: #9ca3af;
+    --primary: #0f172a;
+    --primary-2: #111827;
+    --accent: #2563eb;
+    --danger: #dc2626;
+    --success: #16a34a;
+    --warning: #d97706;
+    --shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+    --radius: 14px;
 }
 
 /* ==================== ПАНЕЛЬ ПОЛЬЗОВАТЕЛЯ ==================== */
 .user-panel {
-    background: linear-gradient(0deg, #2c3e50, #4a6fa5);
+    background: var(--primary);
     color: white;
     padding: 12px 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .user-info {
@@ -34,30 +53,60 @@ body {
     color: white;
 }
 
+.user-panel-left {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-panel-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.18);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    text-decoration: none;
+    color: white;
+    font-weight: 700;
+    flex: 0 0 auto;
+}
+
+.user-panel-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
 .user-links a {
     margin-left: 20px;
     text-decoration: none;
     color: white;
-    background: gray;
+    background: rgba(255, 255, 255, 0.08);
     padding: 8px 20px;
     border-radius: 25px;
     transition: all 0.3s ease;
     font-weight: 500;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .user-links a:hover {
-    background: rgba(255, 255, 255, 0.3);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    background: rgba(255, 255, 255, 0.14);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
 }
 
 /* ==================== ЗАГОЛОВОК И НАВИГАЦИЯ ==================== */
 header {
-    background: linear-gradient(180deg, #2c3e50, #4a6fa5);
+    background: var(--primary-2);
     color: white;
     padding: 40px 20px;
     text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 header h1 {
@@ -79,13 +128,13 @@ nav ul li a {
     text-decoration: none;
     padding: 10px 20px;
     border-radius: 25px;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.08);
     transition: all 0.3s ease;
 }
 
 nav ul li a:hover {
-    background: rgba(255, 255, 255, 0.25);
-    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.14);
+    transform: translateY(-1px);
 }
 
 /* ==================== СООБЩЕНИЯ И УВЕДОМЛЕНИЯ ==================== */
@@ -132,9 +181,10 @@ nav ul li a:hover {
     max-width: 1200px;
     margin: 40px auto;
     padding: 30px;
-    background: white;
+    background: var(--surface);
     border-radius: 15px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
 }
 
 .search-filter form {
@@ -147,24 +197,24 @@ nav ul li a:hover {
 .search-filter input,
 .search-filter select {
     padding: 14px 20px;
-    border: 2px solid #e1e5eb;
+    border: 1px solid var(--border);
     border-radius: 10px;
     font-size: 16px;
     transition: all 0.3s ease;
-    background: #f8f9fa;
+    background: var(--surface-2);
 }
 
 .search-filter input:focus,
 .search-filter select:focus {
     outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
-    background: white;
+    border-color: rgba(37, 99, 235, 0.5);
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+    background: var(--surface);
 }
 
 .search-filter button {
     padding: 14px 30px;
-    background: linear-gradient(135deg, #007bff, #0056b3);
+    background: var(--accent);
     color: white;
     border: none;
     border-radius: 10px;
@@ -179,14 +229,14 @@ nav ul li a:hover {
 }
 
 .search-filter button:hover {
-    background: linear-gradient(135deg, #0056b3, #004085);
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 91, 187, 0.3);
+    background: #1d4ed8;
+    transform: translateY(-1px);
+    box-shadow: 0 10px 20px rgba(37, 99, 235, 0.18);
 }
 
 .button-clear {
     padding: 14px 30px;
-    background: linear-gradient(135deg, #6c757d, #545b62);
+    background: #475569;
     color: white;
     border: none;
     border-radius: 10px;
@@ -197,19 +247,19 @@ nav ul li a:hover {
 }
 
 .button-clear:hover {
-    background: linear-gradient(135deg, #545b62, #3d4348);
-    transform: translateY(-2px);
+    background: #334155;
+    transform: translateY(-1px);
 }
 
 /* ==================== ВАКАНСИИ ==================== */
 .vacancies {
     max-width: 1200px;
     margin: 40px auto;
-    padding: 0 20px;
+    padding: 0 20px 10px;
 }
 
 .vacancies h2 {
-    color: #2c3e50;
+    color: var(--text);
     margin-bottom: 25px;
     padding-bottom: 15px;
     border-bottom: 2px solid #e1e5eb;
@@ -219,18 +269,22 @@ nav ul li a:hover {
 }
 
 .vacancy {
-    background: white;
-    padding: 25px;
+    background: var(--surface);
+    padding: 22px 22px 18px;
     margin: 20px 0;
-    border-radius: 12px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-    border-left: 5px solid #007bff;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    border-left: 4px solid var(--accent);
+    border: 1px solid var(--border);
     transition: all 0.3s;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
 .vacancy:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+    box-shadow: 0 14px 30px rgba(15, 23, 42, 0.10);
 }
 
 .vacancy h2 a {
@@ -246,16 +300,19 @@ nav ul li a:hover {
 
 .vacancy p {
     margin: 8px 0;
-    color: #555;
+    color: #4b5563;
     display: flex;
     align-items: center;
     gap: 8px;
 }
 
 .vacancy strong {
-    color: #333;
-    min-width: 100px;
+    color: var(--muted);
+    min-width: 110px;
     display: inline-block;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
 }
 
 .status {
@@ -293,10 +350,11 @@ nav ul li a:hover {
     text-align: center;
     margin-bottom: 40px;
     padding: 30px;
-    background: linear-gradient(135deg, #2c3e50, #4a8578);
+    background: var(--primary-2);
     color: white;
     border-radius: 15px;
-    box-shadow: 0 5px 20px rgba(0, 123, 255, 0.2);
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .profile-header h1 {
@@ -318,12 +376,25 @@ nav ul li a:hover {
 
 /* Карточка пользователя */
 .user-card {
-    background: white;
-    border-radius: 15px;
-    padding: 25px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 22px 20px 18px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    max-width: 100%;
     margin-bottom: 20px;
     text-align: center;
+}
+
+.user-avatar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 12px;
 }
 
 .avatar-circle {
@@ -340,26 +411,45 @@ nav ul li a:hover {
     margin: 0 auto 20px;
 }
 
+.avatar-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+    margin: 0 auto 20px;
+    border: 2px solid #eef2f7;
+}
+
 .user-card h3 {
-    margin: 10px 0 5px;
-    color: #2c3e50;
+    margin: 8px 0 2px;
+    color: var(--text);
+    font-size: 1.1rem;
+    font-weight: 600;
 }
 
 .user-email {
-    color: #6c757d;
-    font-size: 0.9rem;
+    color: var(--muted-2);
+    font-size: 0.85rem;
 }
 
 .user-info {
-    margin-top: 20px;
+    margin-top: 6px;
     text-align: left;
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    overflow-x: auto;
+    padding-bottom: 4px;
 }
 
 .info-item {
     display: flex;
-    justify-content: space-between;
-    padding: 10px 0;
-    border-bottom: 1px solid #eee;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    padding: 6px 0;
+    flex-shrink: 0;
 }
 
 .info-item:last-child {
@@ -367,21 +457,29 @@ nav ul li a:hover {
 }
 
 .label {
-    color: #6c757d;
+    color: var(--muted);
     font-weight: 500;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
 }
 
 .value {
-    color: #2c3e50;
-    font-weight: 600;
+    color: var(--text);
+    font-weight: 500;
+    font-size: 0.95rem;
+    max-width: 100%;
+    white-space: nowrap;
 }
 
 /* Статистика профиля */
 .stats-card {
-    background: white;
+    background: var(--surface);
     border-radius: 15px;
     padding: 25px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
 }
 
 .stats-card h3 {
@@ -398,14 +496,15 @@ nav ul li a:hover {
 .stat-item {
     text-align: center;
     padding: 15px;
-    background: #f8f9fa;
+    background: var(--surface-2);
     border-radius: 10px;
     transition: transform 0.3s;
+    border: 1px solid var(--border);
 }
 
 .stat-item:hover {
-    transform: translateY(-3px);
-    background: #e9ecef;
+    transform: translateY(-1px);
+    background: #f3f4f6;
 }
 
 .stat-number {
@@ -422,10 +521,11 @@ nav ul li a:hover {
 
 /* Форма редактирования профиля */
 .edit-profile-card {
-    background: white;
+    background: var(--surface);
     border-radius: 15px;
     padding: 30px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
     margin-bottom: 30px;
 }
 
@@ -450,32 +550,61 @@ nav ul li a:hover {
 .form-control {
     width: 100%;
     padding: 12px 15px;
-    border: 2px solid #e1e5eb;
+    border: 1px solid var(--border);
     border-radius: 8px;
     font-size: 16px;
-    transition: all 0.3s;
+    transition: all 0.2s ease;
+    background: var(--surface-2);
 }
 
 .form-control:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+    border-color: rgba(37, 99, 235, 0.55);
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
     outline: none;
+    background: var(--surface);
 }
+
+/* Загрузка аватара в профиле */
+#avatar {
+    padding: 10px 12px;
+    background: #f8f9fa;
+    cursor: pointer;
+}
+
+#avatar::file-selector-button {
+    padding: 8px 16px;
+    margin-right: 12px;
+    border: none;
+    border-radius: 8px;
+    background: var(--accent);
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#avatar::file-selector-button:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+    box-shadow: 0 10px 20px rgba(37, 99, 235, 0.18);
+}
+
 
 
 
 .btn-save:hover {
-    background: linear-gradient(135deg, #218838, #1e7e34);
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+    background: #1d4ed8;
+    transform: translateY(-1px);
+    box-shadow: 0 10px 20px rgba(37, 99, 235, 0.18);
 }
 
 /* Мои вакансии в профиле */
 .my-vacancies {
-    background: white;
-    border-radius: 15px;
+    background: var(--surface);
+    border-radius: var(--radius);
     padding: 30px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
 }
 
 .section-header {
@@ -483,6 +612,71 @@ nav ul li a:hover {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 25px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.section-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.btn-create-vacancy {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 20px;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    box-shadow: 0 6px 14px rgba(37, 99, 235, 0.18);
+    border: none;
+    cursor: pointer;
+}
+
+.btn-create-vacancy:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+    box-shadow: 0 10px 20px rgba(37, 99, 235, 0.24);
+}
+
+/* Кнопки фильтров в профиле */
+.vacancy-filters {
+    display: inline-flex;
+    gap: 8px;
+    background: var(--surface-2);
+    padding: 4px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+}
+
+.filter-btn {
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.filter-btn:hover {
+    background: #e5edff;
+    color: var(--accent);
+}
+
+.filter-btn.active {
+    background: var(--accent);
+    color: #fff;
 }
 
 .btn-create {
@@ -512,9 +706,9 @@ nav ul li a:hover {
     justify-content: space-between;
     align-items: center;
     padding: 20px;
-    background: #f8f9fa;
+    background: var(--surface-2);
     border-radius: 10px;
-    border-left: 4px solid #007bff;
+    border-left: 4px solid var(--accent);
     transition: all 0.3s;
 }
 
@@ -531,35 +725,35 @@ nav ul li a:hover {
 }
 
 .vacancy-info a {
-    color: #2c3e50;
+    color: var(--text);
     text-decoration: none;
     font-size: 1.1rem;
 }
 
 .vacancy-info a:hover {
-    color: #007bff;
+    color: var(--accent);
 }
 
 .status-badge {
     padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 0.8rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
     font-weight: 600;
 }
 
 .status-published {
-    background: #d4edda;
-    color: #155724;
+    background: #dcfce7;
+    color: #166534;
 }
 
 .status-moderation {
-    background: #fff3cd;
-    color: #856404;
+    background: #fef9c3;
+    color: #92400e;
 }
 
 .status-rejected {
-    background: #f8d7da;
-    color: #721c24;
+    background: #fee2e2;
+    color: #b91c1c;
 }
 
 .vacancy-meta {
@@ -574,33 +768,56 @@ nav ul li a:hover {
     gap: 10px;
 }
 
-.btn-view, .btn-edit, .btn-delete {
-    padding: 8px 15px;
-    border-radius: 5px;
-    text-decoration: none;
+/* Базовый вид кнопок действий (просмотр / редактирование / удаление / отклик) */
+.btn-view,
+.btn-edit,
+.btn-delete,
+.btn-apply {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 8px;
     font-size: 0.9rem;
     font-weight: 500;
-    transition: all 0.3s;
+    text-decoration: none;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
-.btn-view {
-    background: #17a2b8;
-    color: white;
+.btn-view:hover,
+.btn-edit:hover,
+.btn-delete:hover,
+.btn-apply:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(15, 23, 42, 0.15);
 }
 
-.btn-edit {
-    background: #ffc107;
-    color: black;
+.vacancy-actions .btn-view {
+    background: var(--accent);
+    color: #fff;
 }
 
-.btn-delete {
-    background: #dc3545;
-    color: white;
+.vacancy-actions .btn-edit {
+    background: #ffe9856c;
+    color: orange;
+    border-color: #e5e7eb;
 }
 
-.btn-view:hover, .btn-edit:hover, .btn-delete:hover {
-    opacity: 0.9;
-    transform: translateY(-2px);
+.vacancy-actions .btn-edit:hover {
+    background: #f3f4f6;
+}
+
+.vacancy-actions .btn-delete {
+    background: #fef2f2;
+    color: #b91c1c;
+    border-color: #fecaca;
+}
+
+.vacancy-actions .btn-delete:hover {
+    background: #fee2e2;
 }
 
 /* Нет вакансий */
@@ -614,19 +831,7 @@ nav ul li a:hover {
 .btn-create-large {
     display: inline-block;
     margin-top: 20px;
-    padding: 15px 30px;
-    background: linear-gradient(135deg, #28a745, #218838);
-    color: white !important;
-    text-decoration: none !important;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 1.1rem;
-    transition: all 0.3s;
-}
-
-.btn-create-large:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(40, 167, 69, 0.3);
+    font-size: 1.02rem;
 }
 
 /* ==================== ФОРМЫ ==================== */
@@ -704,69 +909,74 @@ nav ul li a:hover {
     align-items: center;
     justify-content: center;
     gap: 8px;
-    padding: 10px 25px;
-    border-radius: 8px;
+    padding: 10px 22px;
+    border-radius: 10px;
     text-decoration: none;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    border: none;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 0.9rem;
+    background: var(--accent);
+    color: #fff;
+    box-shadow: 0 6px 14px rgba(37, 99, 235, 0.18);
+}
+
+.button:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+    box-shadow: 0 10px 20px rgba(37, 99, 235, 0.22);
 }
 
 .button-edit {
-    background: linear-gradient(135deg, #ffc107, #e0a800);
-    color: #212529;
-    border-radius: 10px;
-    text-decoration: none;
-
+    background: #facc15;
+    color: #92400e;
 }
 
 .button-edit:hover {
-    background: linear-gradient(135deg, #e0a800, #c69500);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(224, 168, 0, 0.3);
+    background: #fde68a;
+    box-shadow: 0 8px 18px rgba(250, 204, 21, 0.4);
+    transform: translateY(-1px);
 }
 
 .button-delete {
-    background: linear-gradient(135deg, #dc3545, #c82333);
+    background: #fee2e2;
     color: white;
-    border-radius: 5px;
-    text-decoration: none;    border-radius: 10px;
-
+    color: #b91c1c;
 }
 
 .button-delete:hover {
-    background: linear-gradient(135deg, #c82333, #bd2130);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+    background: #fecaca;
+    box-shadow: 0 8px 18px rgba(248, 113, 113, 0.35);
+    transform: translateY(-1px);
 }
 
 .button-view {
-    background: linear-gradient(135deg, #17a2b8, #138496);
-    color: white;
+    background: var(--accent);
+    color: #fff;
 }
 
 .button-view:hover {
-    background: linear-gradient(135deg, #138496, #117a8b);
-    transform: translateY(-2px);
+    background: #1d4ed8;
+    transform: translateY(-1px);
 }
 
 .button1 {
     display: inline-block;
-    padding: 12px 30px;
-    background: linear-gradient(135deg, #28a745, #218838);
-    color: white;
+    padding: 11px 26px;
+    background: var(--accent);
+    color: #fff;
     text-decoration: none;
-    border-radius: 8px;
-    font-weight: bold;
-    transition: all 0.3s;
+    border-radius: 10px;
+    font-weight: 500;
+    transition: all 0.2s;
+    box-shadow: 0 6px 14px rgba(37, 99, 235, 0.2);
 }
 
 .button1:hover {
-    background: linear-gradient(135deg, #218838, #1e7e34);
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+    background: #1d4ed8;
+    transform: translateY(-1px);
+    box-shadow: 0 10px 22px rgba(37, 99, 235, 0.25);
 }
 
 /* ==================== ФУТЕР ==================== */
@@ -872,6 +1082,17 @@ footer {
         flex-direction: column;
         gap: 15px;
         text-align: center;
+    }
+
+    .section-header-actions {
+        flex-direction: column;
+        width: 100%;
+        align-items: stretch;
+    }
+
+    .btn-create-vacancy {
+        width: 100%;
+        justify-content: center;
     }
 }
 
@@ -1172,8 +1393,7 @@ footer {
 
     .achievements {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
+        gap: 15px;
         margin-top: 20px;
     }
 
@@ -1259,19 +1479,10 @@ footer {
         gap: 10px;
     }
 
-    .btn-create {
-        background: linear-gradient(135deg, #28a745, #218838);
-        color: white;
-    }
-
+    .btn-create,
     .btn-view {
-        background: linear-gradient(135deg, #007bff, #0056b3);
-        color: white;
-    }
-
-    .btn-create:hover, .btn-view:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        background: var(--accent);
+        color: #fff;
     }
 
     /* Адаптивность */
@@ -1341,7 +1552,7 @@ footer {
     }
 
     .btn-save {
-        background: linear-gradient(135deg, #2c3e50, #4a8578);
+    background: var(--accent);
         color: white;
         border: none;
         padding: 15px;
@@ -1357,9 +1568,9 @@ footer {
     }
 
     .btn-save:hover {
-        background: linear-gradient(135deg, #0056b3, #004085);
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(0, 123, 255, 0.3);
+    background: #1d4ed8;
+    transform: translateY(-1px);
+    box-shadow: 0 10px 20px rgba(37, 99, 235, 0.18);
     }
 
     .btn-icon {
@@ -1574,22 +1785,23 @@ footer {
     }
 
     .btn-add-vacancy {
-        padding: 14px 25px;
-        background: linear-gradient(135deg, #28a745, #218838);
+        padding: 12px 22px;
+        background: var(--accent);
         color: white;
         border-radius: 10px;
         text-decoration: none;
-        font-weight: 600;
-        transition: all 0.3s;
+        font-weight: 500;
+        transition: all 0.2s;
         display: inline-flex;
         align-items: center;
         gap: 8px;
+        box-shadow: 0 6px 14px rgba(37, 99, 235, 0.18);
     }
 
     .btn-add-vacancy:hover {
-        background: linear-gradient(135deg, #218838, #1e7e34);
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+        background: #1d4ed8;
+        transform: translateY(-1px);
+        box-shadow: 0 10px 20px rgba(37, 99, 235, 0.24);
     }
 
     /* Статистика */
@@ -1598,7 +1810,7 @@ footer {
         gap: 30px;
         margin-bottom: 30px;
         padding: 20px;
-        background: #f8f9fa;
+        background: var(--surface-2);
         border-radius: 10px;
     }
 
@@ -1778,45 +1990,7 @@ footer {
         flex-wrap: wrap;
     }
 
-    .btn-view, .btn-edit, .btn-delete, .btn-apply {
-        padding: 10px 20px;
-        border-radius: 8px;
-        text-decoration: none;
-        font-weight: 500;
-        font-size: 0.95rem;
-        transition: all 0.3s;
-        border: none;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .btn-view {
-        background: #17a2b8;
-        color: white;
-    }
-
-    .btn-edit {
-        background: #ffc107;
-        color: black;
-    }
-
-    .btn-delete {
-        background: #dc3545;
-        color: white;
-    }
-
-    .btn-apply {
-        background: #6f42c1;
-        color: white;
-    }
-
-    .btn-view:hover, .btn-edit:hover, .btn-delete:hover, .btn-apply:hover {
-        opacity: 0.9;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    }
+    /* кнопки используют общие строгие стили */
 
     /* Сообщение "нет вакансий" */
     .no-vacancies {
@@ -1876,7 +2050,7 @@ footer {
 
     .btn-login {
         padding: 15px 30px;
-        background: linear-gradient(135deg, #007bff, #0056b3);
+        background: var(--accent);
         color: white;
         text-decoration: none;
         border-radius: 10px;
@@ -1885,8 +2059,8 @@ footer {
     }
 
     .btn-login:hover {
-        background: linear-gradient(135deg, #0056b3, #004085);
-        transform: translateY(-3px);
+        background: #1d4ed8;
+        transform: translateY(-1px);
     }
 
     /* Пагинация */
@@ -2055,7 +2229,7 @@ footer {
 
     /* Заголовок вакансии */
     .vacancy-header {
-        background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+        background: var(--primary-2);
         color: white;
         padding: 40px;
         border-radius: 15px;
@@ -2065,7 +2239,7 @@ footer {
         align-items: flex-start;
         flex-wrap: wrap;
         gap: 30px;
-        box-shadow: 0 10px 30px rgba(111, 66, 193, 0.3);
+        box-shadow: var(--shadow);
     }
 
     .vacancy-title-section {
@@ -2250,52 +2424,74 @@ footer {
         gap: 15px;
     }
 
-    .btn-edit-large, .btn-delete-large, .btn-apply-large, .btn-save-large, .btn-back-large {
-        padding: 18px 30px;
-        border-radius: 12px;
-        text-decoration: none;
-        font-weight: 600;
-        font-size: 1.1rem;
-        text-align: center;
-        transition: all 0.3s;
-        border: none;
-        cursor: pointer;
-        display: flex;
+    /* Крупные action‑кнопки в деталке вакансии */
+    .action-buttons .btn-edit-large,
+    .action-buttons .btn-delete-large,
+    .action-buttons .btn-apply-large,
+    .action-buttons .btn-save-large,
+    .action-buttons .btn-back-large {
+        display: inline-flex;
         align-items: center;
         justify-content: center;
-        gap: 12px;
+        gap: 10px;
+        padding: 14px 18px;
+        border-radius: 10px;
+        font-size: 1rem;
+        font-weight: 600;
+        text-decoration: none;
+        border: 1px solid transparent;
+        cursor: pointer;
+        transition: all 0.2s ease;
     }
 
-    .btn-edit-large {
-        background: linear-gradient(135deg, #ffc107, #e0a800);
-        color: #212529;
+    .action-buttons .btn-apply-large,
+    .action-buttons .btn-save-large {
+        background: var(--accent);
+        color: #fff;
+        box-shadow: 0 8px 18px rgba(37, 99, 235, 0.2);
     }
 
-    .btn-delete-large {
-        background: linear-gradient(135deg, #dc3545, #c82333);
-        color: white;
+    .action-buttons .btn-apply-large:hover,
+    .action-buttons .btn-save-large:hover {
+        background: #1d4ed8;
+        transform: translateY(-1px);
+        box-shadow: 0 12px 22px rgba(37, 99, 235, 0.22);
     }
 
-    .btn-apply-large {
-        background: linear-gradient(135deg, #28a745, #218838);
-        color: white;
+    .action-buttons .btn-edit-large {
+        background: #ffffff;
+        color: var(--text);
+        border-color: #e5e7eb;
     }
 
-    .btn-save-large {
-        background: linear-gradient(135deg, #007bff, #0056b3);
-        color: white;
+    .action-buttons .btn-edit-large:hover {
+        background: #f3f4f6;
+        transform: translateY(-1px);
+        box-shadow: 0 8px 16px rgba(15, 23, 42, 0.12);
     }
 
-    .btn-back-large {
-        background: linear-gradient(135deg, #6c757d, #545b62);
-        color: white;
+    .action-buttons .btn-delete-large {
+        background: #fef2f2;
+        color: #b91c1c;
+        border-color: #fecaca;
     }
 
-    .btn-edit-large:hover, .btn-delete-large:hover, .btn-apply-large:hover,
-    .btn-save-large:hover, .btn-back-large:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-        opacity: 0.95;
+    .action-buttons .btn-delete-large:hover {
+        background: #fee2e2;
+        transform: translateY(-1px);
+        box-shadow: 0 8px 16px rgba(248, 113, 113, 0.24);
+    }
+
+    .action-buttons .btn-back-large {
+        background: #f1f5f9;
+        color: #111827;
+        border-color: #e5e7eb;
+    }
+
+    .action-buttons .btn-back-large:hover {
+        background: #e5e7eb;
+        transform: translateY(-1px);
+        box-shadow: 0 8px 16px rgba(15, 23, 42, 0.12);
     }
 
     /* Боковая панель */
@@ -2508,6 +2704,7 @@ footer {
 
         .btn-edit-large, .btn-delete-large, .btn-apply-large,
         .btn-save-large, .btn-back-large {
+            text-decoration: none !important;
             padding: 15px 20px;
             font-size: 1rem;
         }
@@ -2684,8 +2881,8 @@ footer {
 .vacancy-form button[type="submit"] {
     width: 100%;
     padding: 18px;
-    background: linear-gradient(135deg, #007bff, #0056b3);
-    color: white;
+        background: var(--accent);
+        color: white;
     border: none;
     border-radius: 12px;
     font-size: 18px;
@@ -2868,7 +3065,7 @@ footer {
     align-items: center;
     margin: 40px 0 20px;
     padding: 20px;
-    background: white;
+    background: var(--surface);
     border-radius: 12px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }

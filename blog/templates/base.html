@@ -13,7 +13,16 @@
     <div class="user-panel">
         <div class="user-info">
             {% if user.is_authenticated %}
-                👤 <strong>{{ user.username }}</strong>
+                <div class="user-panel-left">
+                    <a class="user-panel-avatar" href="{% url 'profile' %}" aria-label="Профиль">
+                        {% if user.profile.avatar %}
+                            <img src="{{ user.profile.avatar.url }}" alt="Аватар">
+                        {% else %}
+                            <span>{{ user.username|first|upper }}</span>
+                        {% endif %}
+                    </a>
+                    <strong>{{ user.username }}</strong>
+                </div>
             {% else %}
                 👤 Гость
             {% endif %}
@@ -40,15 +49,15 @@
 
     <!-- Заголовок и навигация -->
     <header>
-        <h1>🔍 Поиск вакансий</h1>
+        <h1>Поиск вакансий</h1>
         <nav>
             <ul>
-                <li><a href="{% url 'home_page' %}">🏠 Главная</a></li>
-                <li><a href="{% url 'vacancy_list' %}">📋 Все вакансии</a></li>
+                <li><a href="{% url 'home_page' %}">Главная</a></li>
+                <li><a href="{% url 'vacancy_list' %}">Все вакансии</a></li>
                 {% if user.is_authenticated %}
                 {% endif %}
-                <li><a href="{% url 'about_page' %}">ℹ️ О нас</a></li>
-                <li><a href="{% url 'contact_page' %}">📞 Связаться</a></li>
+                <li><a href="{% url 'about_page' %}">О нас</a></li>
+                <li><a href="{% url 'contact_page' %}">Связаться</a></li>
             </ul>
         </nav>
     </header>
