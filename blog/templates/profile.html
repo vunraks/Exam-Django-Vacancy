@@ -6,7 +6,7 @@
 {% block content %}
 <div class="profile-container">
     <div class="profile-header">
-        <h1>👤 Мой профиль</h1>
+        <h1>Мой профиль</h1>
         <p>Управление вашей учетной записью и вакансиями</p>
     </div>
 
@@ -17,9 +17,9 @@
                     {% if profile.avatar %}
                         <img class="avatar-image" src="{{ profile.avatar.url }}" alt="Аватар">
                     {% else %}
-                        <div class="avatar-circle">
-                            {{ user.username|first|upper }}
-                        </div>
+                    <div class="avatar-circle">
+                        {{ user.username|first|upper }}
+                    </div>
                     {% endif %}
                     <h3>{{ user.username }}</h3>
                     <p class="user-email">{{ user.email|default:"Email не указан" }}</p>
@@ -137,11 +137,11 @@
                     <h3>📋 Мои вакансии ({{ stats.total_vacancies }})</h3>
                     <div class="section-header-actions">
                         <a href="{% url 'vacancy_create' %}" class="btn-create-vacancy">➕ Создать вакансию</a>
-                        <div class="vacancy-filters">
-                            <button class="filter-btn active" data-filter="all">Все</button>
-                            <button class="filter-btn" data-filter="published">Опубликованные</button>
-                            <button class="filter-btn" data-filter="moderation">На модерации</button>
-                            <button class="filter-btn" data-filter="rejected">Отклоненные</button>
+                    <div class="vacancy-filters">
+                        <button class="filter-btn active" data-filter="all">Все</button>
+                        <button class="filter-btn" data-filter="published">Опубликованные</button>
+                        <button class="filter-btn" data-filter="moderation">На модерации</button>
+                        <button class="filter-btn" data-filter="rejected">Отклоненные</button>
                         </div>
                     </div>
                 </div>
@@ -177,7 +177,7 @@
                                 </div>
                                 <div class="vacancy-actions">
                                     <a href="{% url 'vacancy_detail' vacancy.pk %}" class="btn-view" title="Просмотр">
-                                        👁️ Просмотр
+                                        Просмотр
                                     </a>
                                     <a href="{% url 'vacancy_update' vacancy.pk %}" class="btn-edit" title="Редактировать">
                                         ✏️ Редактировать

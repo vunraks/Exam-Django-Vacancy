@@ -5,22 +5,22 @@
 
 {% block content %}
 <section class="search-filter">
-    <form method="GET" action="{% url 'home_page' %}">
+    <form method="GET" action="{% url 'vacancy_list' %}">
         <input type="text" name="search" placeholder="Поиск по названию" value="{{ request.GET.search }}">
         <select name="salary">
             <option value="">Зарплата</option>
             {% for salary in salaries %}
-                <option value="{{ salary }}" {% if selected_salary == salary|stringformat:"s" %}selected{% endif %}>{{ salary }} ₸</option>
+                <option value="{{ salary }}">{{ salary }} ₸</option>
             {% endfor %}
         </select>
         <select name="experience">
             <option value="">Опыт работы</option>
             {% for experience in experiences %}
-                <option value="{{ experience }}" {% if selected_experience == experience %}selected{% endif %}>{{ experience }}</option>
+                <option value="{{ experience }}">{{ experience }}</option>
             {% endfor %}
         </select>
         <button type="submit">Применить фильтр</button>
-        <a href="{% url 'home_page' %}" class="button-clear">Сбросить</a>
+        <a href="{% url 'vacancy_list' %}" class="button-clear">Сбросить</a>
     </form>
 </section>
 
@@ -34,17 +34,10 @@
 {% endif %}
 
 <section class="vacancies">
-    <h2>Доступные вакансии
-        {% if page_obj %}
-            ({{ page_obj.paginator.count }})
-        {% else %}
-            ({{ vacancies|length }})
-        {% endif %}
-    </h2>
+    <h2>Популярные вакансии ({{ vacancies|length }})</h2>
 
-    {% if page_obj %}
-        <!-- Если используем пагинацию (page_obj) -->
-        {% for vacancy in page_obj %}
+    {% if vacancies %}
+        {% for vacancy in vacancies %}
             <div class="vacancy">
                 <h2><a href="{% url 'vacancy_detail' vacancy.pk %}">{{ vacancy.title }}</a></h2>
                 <p><strong>🏢 Компания:</strong> {{ vacancy.company }}</p>
@@ -68,55 +61,10 @@
                 {% endif %}
             </div>
         {% endfor %}
-
-        <!-- ПРОСТАЯ ПАГИНАЦИЯ (как в vacancy_list.html) -->
-        {% if page_obj.has_other_pages %}
-        <div class="pagination">
-            <span class="step-links">
-                {% if page_obj.has_previous %}
-                    <a href="?page=1{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.salary %}&salary={{ request.GET.salary }}{% endif %}{% if request.GET.experience %}&experience={{ request.GET.experience }}{% endif %}">« Первая</a>
-                    <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.salary %}&salary={{ request.GET.salary }}{% endif %}{% if request.GET.experience %}&experience={{ request.GET.experience }}{% endif %}">‹ Назад</a>
-                {% endif %}
-
-                <span class="current">
-                    Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
-                </span>
-
-                {% if page_obj.has_next %}
-                    <a href="?page={{ page_obj.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.salary %}&salary={{ request.GET.salary }}{% endif %}{% if request.GET.experience %}&experience={{ request.GET.experience }}{% endif %}">Вперед ›</a>
-                    <a href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.salary %}&salary={{ request.GET.salary }}{% endif %}{% if request.GET.experience %}&experience={{ request.GET.experience }}{% endif %}">Последняя »</a>
-                {% endif %}
-            </span>
+        
+        <div style="text-align: center; margin-top: 30px;">
+            <a href="{% url 'vacancy_list' %}" class="button1">Посмотреть все вакансии</a>
         </div>
-        {% endif %}
-
-    {% elif vacancies %}
-        <!-- Если пагинации нет, но есть вакансии -->
-        {% for vacancy in vacancies %}
-            <div class="vacancy">
-                <h2><a href="{% url 'vacancy_detail' vacancy.pk %}">{{ vacancy.title }}</a></h2>
-                <p><strong>🏢 Компания:</strong> {{ vacancy.company }}</p>
-                <p><strong>💰 Зарплата:</strong> {{ vacancy.salary }}₸</p>
-                <p><strong>📅 Опыт:</strong> {{ vacancy.experience }} лет</p>
-                <p><strong>📝 Статус:</strong>
-                    {% if vacancy.status == 'published' %}
-                        <span class="status status-published">Опубликовано</span>
-                    {% elif vacancy.status == 'moderation' %}
-                        <span class="status status-moderation">На модерации</span>
-                    {% else %}
-                        <span class="status status-rejected">Отклонено</span>
-                    {% endif %}
-                </p>
-
-                {% if user.is_authenticated and vacancy.author == user %}
-                    <div class="vacancy-actions">
-                        <a href="{% url 'vacancy_update' vacancy.pk %}" class="btn-edit">✏️ Редактировать</a>
-                        <a href="{% url 'vacancy_delete' vacancy.pk %}" class="btn-delete">🗑️ Удалить</a>
-                    </div>
-                {% endif %}
-            </div>
-        {% endfor %}
-
     {% else %}
         <div class="no-vacancies">
             <p>😔 Нет доступных вакансий.</p>

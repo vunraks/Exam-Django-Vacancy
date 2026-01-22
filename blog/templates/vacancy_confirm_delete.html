@@ -1,7 +1,48 @@
-<h1>Удалить вакансию??</h1>
-<p>Вы уверены, что хотите удалить "{{ vacancy.title}}"?</p>
-<form method="post">
-    {% csrf_token %}
-    <button type="submit">Delete</button>
-</form>
-<a href="{% url 'home_page' %}">Отмена</a>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Удаление вакансии - Поиск вакансий{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <div class="form-card delete-confirm-card">
+        <h2>🗑️ Удаление вакансии</h2>
+        
+        <div class="delete-warning">
+            <div class="warning-icon">⚠️</div>
+            <p class="warning-text">
+                Вы уверены, что хотите удалить вакансию <strong>"{{ vacancy.title }}"</strong>?
+            </p>
+            <p class="warning-subtext">
+                Это действие нельзя отменить. Все данные о вакансии будут безвозвратно удалены.
+            </p>
+        </div>
+
+        <div class="vacancy-preview">
+            <h3>Информация о вакансии:</h3>
+            <div class="preview-item">
+                <strong>Название:</strong> {{ vacancy.title }}
+            </div>
+            <div class="preview-item">
+                <strong>Компания:</strong> {{ vacancy.company }}
+            </div>
+            {% if vacancy.salary %}
+            <div class="preview-item">
+                <strong>Зарплата:</strong> {{ vacancy.salary }} ₸
+            </div>
+            {% endif %}
+            <div class="preview-item">
+                <strong>Дата создания:</strong> {{ vacancy.created_at|date:"d.m.Y H:i" }}
+            </div>
+        </div>
+
+        <form method="post" class="delete-form">
+            {% csrf_token %}
+            <div class="form-actions">
+                <button type="submit" class="btn-delete-confirm">🗑️ Да, удалить</button>
+                <a href="{% url 'vacancy_detail' vacancy.pk %}" class="btn-cancel">❌ Отмена</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

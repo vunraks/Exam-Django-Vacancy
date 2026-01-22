@@ -231,32 +231,11 @@ from .models import Vacancy
 
 
 def home_page(request):
-    # Получаем опубликованные вакансии
-    vacancies_list = Vacancy.objects.filter(status='published')
+    # Получаем только 3 последние опубликованные вакансии (популярные/новые)
+    # Сортируем по дате создания, самые новые первыми
+    popular_vacancies = Vacancy.objects.filter(status='published').order_by('-created_at')[:3]
 
-    # Фильтрация
-    search = request.GET.get('search', '')
-    salary = request.GET.get('salary', '')
-    experience = request.GET.get('experience', '')
-
-    if search:
-        vacancies_list = vacancies_list.filter(
-            models.Q(title__icontains=search) |
-            models.Q(company__icontains=search)
-        )
-
-    if salary:
-        vacancies_list = vacancies_list.filter(salary__gte=salary)
-
-    if experience:
-        vacancies_list = vacancies_list.filter(experience__gte=experience)
-
-    # ПАГИНАЦИЯ - вот здесь меняйте число!
-    paginator = Paginator(vacancies_list, 3)  # ← ИЗМЕНИТЕ 5 на нужное количество
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-
-    # Уникальные значения для фильтров
+    # Уникальные значения для фильтров (для формы поиска)
     salaries = sorted(set(Vacancy.objects.filter(status='published')
                           .values_list('salary', flat=True)
                           .exclude(salary__isnull=True)))
@@ -265,13 +244,9 @@ def home_page(request):
                              .exclude(experience__isnull=True)))
 
     context = {
-        'vacancies': page_obj,  # Для совместимости со старым кодом
-        'page_obj': page_obj,  # Для пагинации
+        'vacancies': popular_vacancies,  # Только 3 популярные вакансии
         'salaries': salaries,
         'experiences': experiences,
-        'selected_salary': salary,
-        'selected_experience': experience,
-        'search_query': search,
     }
 
     return render(request, 'home.html', context)

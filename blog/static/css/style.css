@@ -2882,7 +2882,7 @@ footer {
     width: 100%;
     padding: 18px;
         background: var(--accent);
-        color: white;
+    color: white;
     border: none;
     border-radius: 12px;
     font-size: 18px;
@@ -3056,7 +3056,151 @@ footer {
     }
 }
 
+/* ==================== СТИЛИ ДЛЯ СТРАНИЦЫ ПОДТВЕРЖДЕНИЯ УДАЛЕНИЯ ==================== */
+.delete-confirm-card {
+    max-width: 600px;
+    margin: 0 auto;
+}
 
+.delete-confirm-card h2 {
+    color: #dc3545;
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #fee2e2;
+}
+
+.delete-warning {
+    background: #fef2f2;
+    border: 2px solid #fecaca;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.warning-icon {
+    font-size: 3rem;
+    margin-bottom: 15px;
+}
+
+.warning-text {
+    font-size: 1.2rem;
+    color: #991b1b;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.warning-text strong {
+    color: #dc2626;
+}
+
+.warning-subtext {
+    font-size: 0.95rem;
+    color: #7f1d1d;
+    margin-top: 10px;
+}
+
+.vacancy-preview {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.vacancy-preview h3 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.preview-item {
+    padding: 10px 0;
+    border-bottom: 1px solid #e9ecef;
+    color: #495057;
+    font-size: 0.95rem;
+}
+
+.preview-item:last-child {
+    border-bottom: none;
+}
+
+.preview-item strong {
+    color: #2c3e50;
+    min-width: 140px;
+    display: inline-block;
+}
+
+.delete-form {
+    margin-top: 30px;
+}
+
+.delete-form .form-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn-delete-confirm {
+    padding: 14px 30px;
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-delete-confirm:hover {
+    background: linear-gradient(135deg, #c82333, #bd2130);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(220, 53, 69, 0.3);
+}
+
+.btn-cancel {
+    padding: 14px 30px;
+    background: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-cancel:hover {
+    background: #5a6268;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(108, 117, 125, 0.3);
+}
+
+@media (max-width: 576px) {
+    .delete-form .form-actions {
+        flex-direction: column;
+    }
+
+    .btn-delete-confirm,
+    .btn-cancel {
+        width: 100%;
+    }
+}
 
 /* Стили для пагинации */
 .pagination {
